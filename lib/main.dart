@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:food/LogIn.dart';
+import 'package:food/SignUp.dart';
+import 'package:food/Welcome.dart';
 
 void main() => runApp(MyApp());
 
@@ -7,11 +11,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+       localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale("fa", "IR"), // OR Locale('ar', 'AE') OR Other RTL locales
+        ],
+        locale:
+            Locale("fa", "IR"), 
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: "IranSans"
       ),
-      home: HomePage(),
+      home: LogIn()
     );
   }
 }
@@ -26,9 +40,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Center(
-          child: Text("Hi World!"),
-        ),
+        child: Center(child: Text("سلام دنیا",style: TextStyle(fontSize: 20),))
       ),
     );
   }
