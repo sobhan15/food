@@ -26,6 +26,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   pin_code_text_field: ^1.4.0
+  smooth_star_rating: ^1.0.3
   
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
    - images/wb.jpg
+   - images/ghorme.jpg
+   - images/dizi.jpg
   
 
   # An image asset can refer to one or more resolution-specific "variants", see

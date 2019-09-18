@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:food/LogIn.dart';
+import 'package:food/FoodList.dart';
 import 'package:food/SignUp.dart';
 import 'package:food/Welcome.dart';
+
+import 'LogIn.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: "IranSans"
       ),
-      home: LogIn()
+      home: FoodList()
     );
   }
 }
