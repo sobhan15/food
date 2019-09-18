@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food/FoodItem.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class FoodList extends StatefulWidget {
@@ -8,6 +9,10 @@ class FoodList extends StatefulWidget {
 
 class _FoodListState extends State<FoodList> {
   double starRating;
+  bool activeFood = true;
+  bool activeResturan = false;
+  bool activeBasket = false;
+
   @override
   void initState() {
     super.initState();
@@ -19,195 +24,176 @@ class _FoodListState extends State<FoodList> {
   }
 
   Widget rightTolbarItem(String name, bool isActive) {
-    return RotationTransition(
-        turns: AlwaysStoppedAnimation(90 / 360),
-        child: isActive
-            ? Text(name,
-                style: TextStyle(
-                    fontSize: 19,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700))
-            : Text(name,
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500)));
+    return Container(
+      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * 1,
+      height: 70,
+      child: RotationTransition(
+          turns: AlwaysStoppedAnimation(90 / 360),
+          child: isActive
+              ? Text(name,
+                  style: TextStyle(
+                      fontSize: 19,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700))
+              : Text(name,
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500))),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("لیست غذا ها"),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.deepPurple[200],
+          onPressed: () {},
         ),
-        body: Stack(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(right: 10),
-              alignment: Alignment.centerRight,
-              height: MediaQuery.of(context).size.height * 0.125,
-              child: Text(
-                "رستوران چاپاتی",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      rightTolbarItem("غذا ها", true),
-                      rightTolbarItem("رستوران ها", false),
-                      rightTolbarItem("سبد خرید", false),
-                    ],
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    color: Colors.white,
-                    child: PageView(
-                      controller: PageController(viewportFraction: 0.7),
-                      onPageChanged: (v) {
-                        print(v);
-                      },
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: Container(
+          child: Stack(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: MediaQuery.of(context).size.height * 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        Container(
-                            color: Colors.blue,
-                            width: MediaQuery.of(context).size.width * 1,
-                            height: MediaQuery.of(context).size.height * 1,
-                            child: Stack(
-                              alignment: Alignment.topCenter,
-                              children: <Widget>[
-                                Container(
-                                  color: Colors.black,
-                                  width: MediaQuery.of(context).size.width * 1,
-                                  height: MediaQuery.of(context).size.height *
-                                      0.225,
-                                ),
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.amber,
-                                          shape: BoxShape.circle),
-                                      width: 100,
-                                      height: 100,
-                                    ),
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                      child: Text(
-                                        "قرمه سبزی",
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 20),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      child: Text(
-                                        "برنج ایرانی + خورش + کره + لیمو + ترشی",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                       Container(
-                                      
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      alignment: Alignment.center,
-                                      child: SmoothStarRating(
-                                            color: Colors.red,
-                                            allowHalfRating: true,
-                                            starCount: 5,
-                                            rating: starRating == null
-                                                ? 0
-                                                : starRating,
-                                            borderColor: Colors.amber,
-                                            onRatingChanged: (v) {
-                                              print(v);
-                                              setState(() {
-                                                starRating = v;
-                                              });
-                                            },
-                                          )
-                                    ),
-                                   
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      alignment: Alignment.centerRight,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(Icons.attach_money),
-                                          Text("13,000 هزار تومان"),
-                                        ],
-                                      ),
-                                    ),
-                                     Container(
-                                      margin: EdgeInsets.only(right: 5),
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      alignment: Alignment.centerRight,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(Icons.person),
-                                          Text("یک نفره"),
-                                        ],
-                                      ),
-                                    ),
-                                 
-                                   Container(
-                                      margin: EdgeInsets.only(right: 5),
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      alignment: Alignment.centerRight,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(Icons.person),
-                                          RaisedButton(onPressed: (){
-
-                                          },
-                                          child: Text("خرید"),),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 1,
-                          color: Colors.red,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 1,
-                          color: Colors.blue,
-                        )
+                        GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                activeFood = true;
+                                activeResturan = false;
+                                activeBasket = false;
+                              });
+                            },
+                            child: rightTolbarItem("غذا ها", activeFood)),
+                        GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                activeFood = false;
+                                activeResturan = true;
+                                activeBasket = false;
+                              });
+                            },
+                            child:
+                                rightTolbarItem("رستوران ها", activeResturan)),
+                        GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                activeFood = false;
+                                activeResturan = false;
+                                activeBasket = true;
+                              });
+                            },
+                            child: rightTolbarItem("سبد خرید", activeBasket)),
                       ],
                     ),
                   ),
+                  Container(
+                    child: PageView(
+                      children: <Widget>[
+                        Flexible(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.02),
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.only(right: 10),
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            child: Text(
+                              "رستوران چاپاتی",
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: MediaQuery.of(context).size.height * 0.75,
+                            child: PageView(
+                              controller:
+                                  PageController(viewportFraction: 0.85),
+                              onPageChanged: (v) {
+                                print(v);
+                              },
+                              children: <Widget>[
+                                FoodItem(
+                                    imageFood: "ghorme",
+                                    nameFood: "قورمه سبزی",
+                                    descFood:
+                                        "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
+                                    ratingFood: 3.5,
+                                    pricefood: 13000,
+                                    person: "یک"),
+                                FoodItem(
+                                    imageFood: "dizi",
+                                    nameFood: "دیزی سنگی",
+                                    descFood:
+                                        "سبزی + پیاز + ترشی بادمجان + دو تکه سنگک",
+                                    ratingFood: 5,
+                                    pricefood: 10000,
+                                    person: "یک"),
+                                FoodItem(
+                                    imageFood: "ghorme",
+                                    nameFood: "قورمه سبزی",
+                                    descFood:
+                                        "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
+                                    ratingFood: 3.5,
+                                    pricefood: 13000,
+                                    person: "یک"),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                      ],
+                    )
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 1,
+                  height: MediaQuery.of(context).size.height * 0.08,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(
+                        "دسته بندی",
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      ),
+                      Text(
+                        "نقشه",
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      ),
+                      Text("           "),
+                      Text(
+                        "سفارشات",
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      ),
+                      Text(
+                        "خروج",
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      ),
+                    ],
+                  ),
+                  color: Colors.deepPurple[200],
                 ),
-              ],
-            )
-          ],
+              )
+            ],
+          ),
         ));
   }
 }
