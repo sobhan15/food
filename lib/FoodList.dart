@@ -9,17 +9,25 @@ class FoodList extends StatefulWidget {
 
 class _FoodListState extends State<FoodList> {
   double starRating;
-  bool activeFood = true;
-  bool activeResturan = false;
+  bool activeFood = false;
+  bool activeResturan = true;
   bool activeBasket = false;
+  String title = "رستوران ها";
+
+  PageController verPageController;
+  PageController horPageController;
 
   @override
   void initState() {
     super.initState();
+    verPageController = PageController(initialPage: 0);
+    horPageController = PageController(viewportFraction: 0.85);
   }
 
   @override
   void dispose() {
+    verPageController.dispose();
+    horPageController.dispose();
     super.dispose();
   }
 
@@ -42,6 +50,15 @@ class _FoodListState extends State<FoodList> {
                       color: Colors.grey,
                       fontWeight: FontWeight.w500))),
     );
+  }
+
+  void toolbarItemOption(
+      bool activeFood, bool activeResturan, bool activeBasket) {
+    setState(() {
+      this.activeFood = activeFood;
+      this.activeResturan = activeResturan;
+      this.activeBasket = activeBasket;
+    });
   }
 
   @override
@@ -69,96 +86,116 @@ class _FoodListState extends State<FoodList> {
                       children: <Widget>[
                         GestureDetector(
                             onTap: () {
-                              setState(() {
-                                activeFood = true;
-                                activeResturan = false;
-                                activeBasket = false;
-                              });
+                              toolbarItemOption(false, true, false);
+                              verPageController.animateToPage(0,
+                                  duration: Duration(milliseconds: 800),
+                                  curve: Curves.linearToEaseOut);
+                            },
+                            child: rightTolbarItem("رستوران", activeResturan)),
+                        GestureDetector(
+                            onTap: () {
+                              toolbarItemOption(true, false, false);
+                              verPageController.animateToPage(1,
+                                  duration: Duration(milliseconds: 1200),
+                                  curve: Curves.linearToEaseOut);
                             },
                             child: rightTolbarItem("غذا ها", activeFood)),
                         GestureDetector(
                             onTap: () {
-                              setState(() {
-                                activeFood = false;
-                                activeResturan = true;
-                                activeBasket = false;
-                              });
-                            },
-                            child:
-                                rightTolbarItem("رستوران ها", activeResturan)),
-                        GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                activeFood = false;
-                                activeResturan = false;
-                                activeBasket = true;
-                              });
+                              toolbarItemOption(false, false, true);
+                              verPageController.animateToPage(2,
+                                  duration: Duration(milliseconds: 800),
+                                  curve: Curves.linearToEaseOut);
                             },
                             child: rightTolbarItem("سبد خرید", activeBasket)),
                       ],
                     ),
                   ),
                   Container(
-                    child: PageView(
+                    child: Column(
                       children: <Widget>[
-                        Flexible(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.02),
-                            alignment: Alignment.centerRight,
-                            padding: EdgeInsets.only(right: 10),
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            child: Text(
-                              "رستوران چاپاتی",
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.02),
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.only(right: 10),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          height: MediaQuery.of(context).size.height * 0.09,
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
                           ),
-                          Container(
+                        ),
+                        Container(
                             width: MediaQuery.of(context).size.width * 0.8,
                             height: MediaQuery.of(context).size.height * 0.75,
                             child: PageView(
-                              controller:
-                                  PageController(viewportFraction: 0.85),
+                              controller: verPageController,
                               onPageChanged: (v) {
-                                print(v);
+                                if (v == 0) {
+                                  toolbarItemOption(false, true, false);
+                                  setState(() {
+                                    title = "رستوران ها";
+                                  });
+                                } else if (v == 1) {
+                                  toolbarItemOption(true, false, false);
+
+                                  setState(() {
+                                    title = "رستوران چاپاتی";
+                                  });
+                                } else if (v == 2) {
+                                  toolbarItemOption(false, false, true);
+
+                                  setState(() {
+                                    title = "سبد خرید";
+                                  });
+                                }
                               },
+                              scrollDirection: Axis.vertical,
                               children: <Widget>[
-                                FoodItem(
-                                    imageFood: "ghorme",
-                                    nameFood: "قورمه سبزی",
-                                    descFood:
-                                        "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
-                                    ratingFood: 3.5,
-                                    pricefood: 13000,
-                                    person: "یک"),
-                                FoodItem(
-                                    imageFood: "dizi",
-                                    nameFood: "دیزی سنگی",
-                                    descFood:
-                                        "سبزی + پیاز + ترشی بادمجان + دو تکه سنگک",
-                                    ratingFood: 5,
-                                    pricefood: 10000,
-                                    person: "یک"),
-                                FoodItem(
-                                    imageFood: "ghorme",
-                                    nameFood: "قورمه سبزی",
-                                    descFood:
-                                        "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
-                                    ratingFood: 3.5,
-                                    pricefood: 13000,
-                                    person: "یک"),
+                                Center(
+                                  child: Text("رستوران"),
+                                ),
+                                PageView(
+                                  controller:horPageController,
+                                  onPageChanged: (v) {
+                                    print(v);
+                                  },
+                                  children: <Widget>[
+                                    FoodItem(
+                                        imageFood: "ghorme",
+                                        nameFood: "قورمه سبزی",
+                                        descFood:
+                                            "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
+                                        ratingFood: 3.5,
+                                        pricefood: 13000,
+                                        person: "یک"),
+                                    FoodItem(
+                                        imageFood: "dizi",
+                                        nameFood: "دیزی سنگی",
+                                        descFood:
+                                            "سبزی + پیاز + ترشی بادمجان + دو تکه سنگک",
+                                        ratingFood: 5,
+                                        pricefood: 10000,
+                                        person: "یک"),
+                                    FoodItem(
+                                        imageFood: "ghorme",
+                                        nameFood: "قورمه سبزی",
+                                        descFood:
+                                            "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
+                                        ratingFood: 3.5,
+                                        pricefood: 13000,
+                                        person: "یک"),
+                                  ],
+                                ),
+                                Center(
+                                  child: Text("data"),
+                                )
                               ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                            )),
                       ],
-                    )
+                    ),
                   ),
                 ],
               ),
