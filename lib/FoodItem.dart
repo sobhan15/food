@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'FoodData.dart' as FoodData;
 
 class FoodItem extends StatefulWidget {
   final String imageFood;
@@ -18,7 +19,7 @@ class FoodItem extends StatefulWidget {
       this.descFood,
       this.ratingFood,
       this.pricefood,
-      this.person})
+      this.person,})
       : super(key: key);
 
   @override
@@ -32,7 +33,9 @@ class _FoodItemState extends State<FoodItem> {
   double ratingFood;
   int pricefood;
   String person;
-  int orderCount=0;
+  int orderCount = 0;
+
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
@@ -50,12 +53,12 @@ class _FoodItemState extends State<FoodItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Center(
         child: Container(
             decoration: BoxDecoration(
-              
                 color: Colors.deepPurple[50],
-              borderRadius: BorderRadius.all(Radius.circular(20))),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
             width: MediaQuery.of(context).size.width * 1,
             height: MediaQuery.of(context).size.height * 1,
             child: Stack(
@@ -63,31 +66,31 @@ class _FoodItemState extends State<FoodItem> {
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
-              
-              borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.only(topLeft:Radius.circular(20),
-                    topRight: Radius.circular(20)),
-                    child:Image.asset("images/$imageFood.jpg",
-                    width: MediaQuery.of(context).size.width * 1,
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    fit: BoxFit.cover,
-                    )
-                  ),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20)),
+                      child: Image.asset(
+                        "images/$imageFood.jpg",
+                        width: MediaQuery.of(context).size.width * 1,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        fit: BoxFit.cover,
+                      )),
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft:Radius.circular(20),
-                    topRight: Radius.circular(20)),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20)),
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                        Colors.black54,
-                        Colors.black12,
-                        Colors.deepPurple[50],
-                        
-                      ])),
+                            Colors.black54,
+                            Colors.black12,
+                            Colors.deepPurple[50],
+                          ])),
                   width: MediaQuery.of(context).size.width * 1,
                   height: MediaQuery.of(context).size.height * 0.3,
                 ),
@@ -203,12 +206,52 @@ class _FoodItemState extends State<FoodItem> {
                         ],
                       ),
                     ),
-                    Container(
-                      width: 80,
-                      height: 30,
-                      alignment: Alignment.center,
-                      child: Text("ثبت"),
-                      color: Colors.amber,
+                    GestureDetector(
+                      onTap: () {
+                        if (orderCount == 0) {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            backgroundColor: Colors.deepPurple[200],
+                            content: Text(
+                              "لطفا تعداد غدا هارا مشخص کنید",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ));
+                        } else {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text(
+                              "به تعداد $orderCount عدد $nameFood به سبد خرید شما اضافه شد",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ));
+
+                          var pickFood = {
+                            "nameFood": nameFood,
+                            "imageFood": imageFood,
+                            "descFood": descFood,
+                            "priceFood": pricefood,
+                            "person": person,
+                            "totalPrice": pricefood * orderCount
+                          };
+
+                          FoodData.basketFood.add(pickFood);
+                          print(FoodData.basketFood);
+                        }
+                      },
+                      child: Container(
+                        width: 80,
+                        height: 30,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "ثبت",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        color: Colors.deepPurple[200],
+                      ),
                     )
                   ],
                 ),

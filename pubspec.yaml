@@ -52,6 +52,10 @@ flutter:
    - images/wb.jpg
    - images/ghorme.jpg
    - images/dizi.jpg
+   - images/zhoan.jpg
+   - images/ziton.jpg
+   - images/chapati.jpg
+   - images/hajsh.jpg
   
 
   # An image asset can refer to one or more resolution-specific "variants", see

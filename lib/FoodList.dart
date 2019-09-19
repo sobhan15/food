@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food/FoodData.dart';
 import 'package:food/FoodItem.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+
+import 'Basket.dart';
+import 'ResturanList.dart';
 
 class FoodList extends StatefulWidget {
   @override
@@ -13,6 +17,8 @@ class _FoodListState extends State<FoodList> {
   bool activeResturan = true;
   bool activeBasket = false;
   String title = "رستوران ها";
+
+  List basketFood = [];
 
   PageController verPageController;
   PageController horPageController;
@@ -34,12 +40,13 @@ class _FoodListState extends State<FoodList> {
   Widget rightTolbarItem(String name, bool isActive) {
     return Container(
       alignment: Alignment.center,
-      width: MediaQuery.of(context).size.width * 1,
-      height: 70,
+      width: MediaQuery.of(context).size.width * 0.2,
+      height: MediaQuery.of(context).size.height * 0.30,
       child: RotationTransition(
           turns: AlwaysStoppedAnimation(90 / 360),
           child: isActive
               ? Text(name,
+                  maxLines: 1,
                   style: TextStyle(
                       fontSize: 19,
                       color: Colors.black,
@@ -79,11 +86,11 @@ class _FoodListState extends State<FoodList> {
               Row(
                 children: <Widget>[
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.15,
                     height: MediaQuery.of(context).size.height * 1,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
+                        Text(""),
                         GestureDetector(
                             onTap: () {
                               toolbarItemOption(false, true, false);
@@ -92,6 +99,7 @@ class _FoodListState extends State<FoodList> {
                                   curve: Curves.linearToEaseOut);
                             },
                             child: rightTolbarItem("رستوران", activeResturan)),
+                        Text(""),
                         GestureDetector(
                             onTap: () {
                               toolbarItemOption(true, false, false);
@@ -100,6 +108,7 @@ class _FoodListState extends State<FoodList> {
                                   curve: Curves.linearToEaseOut);
                             },
                             child: rightTolbarItem("غذا ها", activeFood)),
+                        Text(""),
                         GestureDetector(
                             onTap: () {
                               toolbarItemOption(false, false, true);
@@ -128,7 +137,7 @@ class _FoodListState extends State<FoodList> {
                           ),
                         ),
                         Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
+                            width: MediaQuery.of(context).size.width * 0.85,
                             height: MediaQuery.of(context).size.height * 0.75,
                             child: PageView(
                               controller: verPageController,
@@ -155,22 +164,36 @@ class _FoodListState extends State<FoodList> {
                               scrollDirection: Axis.vertical,
                               children: <Widget>[
                                 Center(
-                                  child: Text("رستوران"),
-                                ),
+                                    child: ResturanList(
+                                  imgName: [
+                                    "zhoan.jpg",
+                                    "ziton.jpg",
+                                    "chapati.jpg",
+                                    "hajsh.jpg",
+                                  ],
+                                  resturanName: [
+                                    "ژوان",
+                                    "زیتون",
+                                    "چاپاتی",
+                                    "حاج شفیع",
+                                  ],
+                                )),
                                 PageView(
-                                  controller:horPageController,
+                                  controller: horPageController,
                                   onPageChanged: (v) {
                                     print(v);
                                   },
                                   children: <Widget>[
                                     FoodItem(
-                                        imageFood: "ghorme",
-                                        nameFood: "قورمه سبزی",
-                                        descFood:
-                                            "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
-                                        ratingFood: 3.5,
-                                        pricefood: 13000,
-                                        person: "یک"),
+                                      imageFood: "ghorme",
+                                      nameFood: "قورمه سبزی",
+                                      descFood:
+                                          "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
+                                      ratingFood: 3.5,
+                                      pricefood: 13000,
+                                      person: "یک",
+                                      
+                                    ),
                                     FoodItem(
                                         imageFood: "dizi",
                                         nameFood: "دیزی سنگی",
@@ -189,9 +212,7 @@ class _FoodListState extends State<FoodList> {
                                         person: "یک"),
                                   ],
                                 ),
-                                Center(
-                                  child: Text("data"),
-                                )
+                                Basket(),
                               ],
                             )),
                       ],
@@ -209,20 +230,20 @@ class _FoodListState extends State<FoodList> {
                     children: <Widget>[
                       Text(
                         "دسته بندی",
-                        style: TextStyle(color: Colors.white, fontSize: 17),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       Text(
                         "نقشه",
-                        style: TextStyle(color: Colors.white, fontSize: 17),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       Text("           "),
                       Text(
                         "سفارشات",
-                        style: TextStyle(color: Colors.white, fontSize: 17),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       Text(
                         "خروج",
-                        style: TextStyle(color: Colors.white, fontSize: 17),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ],
                   ),
