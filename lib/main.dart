@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:food/FoodGroups.dart';
 import 'package:food/FoodList.dart';
 import 'package:food/SignUp.dart';
 import 'package:food/Welcome.dart';
@@ -24,6 +25,8 @@ class MyApp extends StatelessWidget {
             Locale("fa", "IR"), 
       title: 'Flutter Demo',
       theme: ThemeData(
+        primaryColor: Colors.indigo[200],
+        accentColor: Colors.indigo[50],
         primarySwatch: Colors.blue,
         fontFamily: "IranSans"
       ),

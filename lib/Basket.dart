@@ -56,58 +56,74 @@ class _BasketState extends State<Basket> {
                     itemBuilder: (context, position) {
                       var data = basketData[position];
 
-                      return Stack(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            margin: EdgeInsets.all(2.5),
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.centerRight,
-                                    end: Alignment.bottomLeft,
-                                    colors: [
-                                  Colors.white10,
-                                  Colors.white30,
-                                  Colors.deepPurple[200],
-                                ])),
-                            width: MediaQuery.of(context).size.width * 1,
-                            height: MediaQuery.of(context).size.height * 0.15,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 1,
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            margin: EdgeInsets.all(2.5),
-                            child: Row(
-                              children: <Widget>[
-                                ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  child: Image.asset(
-                                    "images/${data["imageFood"]}.jpg",
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Text(
-                                        data["nameFood"],
-                                        style: TextStyle(
-                                            fontSize: 19,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text("به تعداد : ${data["orderCount"]}"),
-                                      Text("قیمت : ${data["priceFood"]} "),
-                                    ],
-                                  ),
-                                )
-                              ],
+                      return Dismissible(
+                        key: Key(data["nameFood"]),
+                        
+                        onDismissed: (v) {
+                            totalPrice -= basketData[position]["totalPrice"];
+
+                          setState(() {
+                            basketData.removeAt(position);
+                            print(totalPrice);
+                          });
+                        },
+                        background: Container(
+                          color: Colors.red,
+                        ),
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              margin: EdgeInsets.all(2.5),
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerRight,
+                                      end: Alignment.bottomLeft,
+                                      colors: [
+                                    Colors.white10,
+                                    Colors.white30,
+                                    Theme.of(context).primaryColor,
+                                  ])),
+                              width: MediaQuery.of(context).size.width * 1,
+                              height: MediaQuery.of(context).size.height * 0.15,
                             ),
-                          ),
-                        ],
+                            Container(
+                              width: MediaQuery.of(context).size.width * 1,
+                              height: MediaQuery.of(context).size.height * 0.15,
+                              margin: EdgeInsets.all(2.5),
+                              child: Row(
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    child: Image.asset(
+                                      "images/${data["imageFood"]}.jpg",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(right: 10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Text(
+                                          data["nameFood"],
+                                          style: TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                            "به تعداد : ${data["orderCount"]}"),
+                                        Text("قیمت : ${data["priceFood"]} "),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -155,7 +171,8 @@ class _BasketState extends State<Basket> {
                                       child: Text(
                                         "پرداخت آنلاین",
                                         style: TextStyle(
-                                            color: Colors.deepPurple[200]),
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                       width: 100,
                                       height: 40,
@@ -171,7 +188,8 @@ class _BasketState extends State<Basket> {
                                       child: Text(
                                         "پرداخت حضوری",
                                         style: TextStyle(
-                                            color: Colors.deepPurple[200]),
+                                            color:
+                                                Theme.of(context).primaryColor),
                                       ),
                                       width: 100,
                                       height: 40,
@@ -183,7 +201,7 @@ class _BasketState extends State<Basket> {
                           ),
                           width: MediaQuery.of(context).size.width * 1,
                           height: MediaQuery.of(context).size.height * 0.2,
-                          color: Colors.deepPurple[200],
+                          color: Theme.of(context).primaryColor,
                         ),
                 )
               ],

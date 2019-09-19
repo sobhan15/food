@@ -57,7 +57,7 @@ class _FoodItemState extends State<FoodItem> {
       body: Center(
         child: Container(
             decoration: BoxDecoration(
-                color: Colors.deepPurple[50],
+                color: Theme.of(context).accentColor,
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             width: MediaQuery.of(context).size.width * 1,
             height: MediaQuery.of(context).size.height * 1,
@@ -89,7 +89,7 @@ class _FoodItemState extends State<FoodItem> {
                           colors: [
                             Colors.black54,
                             Colors.black12,
-                            Colors.deepPurple[50],
+                            Theme.of(context).accentColor,
                           ])),
                   width: MediaQuery.of(context).size.width * 1,
                   height: MediaQuery.of(context).size.height * 0.3,
@@ -127,11 +127,11 @@ class _FoodItemState extends State<FoodItem> {
                         width: MediaQuery.of(context).size.width * 1,
                         alignment: Alignment.center,
                         child: SmoothStarRating(
-                          color: Colors.red,
+                          color: Theme.of(context).primaryColor,
                           allowHalfRating: true,
                           starCount: 5,
                           rating: ratingFood == null ? 0 : ratingFood,
-                          borderColor: Colors.amber,
+                          borderColor: Theme.of(context).primaryColor,
                         )),
                     Container(
                       width: MediaQuery.of(context).size.width * 1,
@@ -250,7 +250,7 @@ class _FoodItemState extends State<FoodItem> {
                           "ثبت",
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
-                        color: Colors.deepPurple[200],
+                        color: Theme.of(context).primaryColor,
                       ),
                     )
                   ],

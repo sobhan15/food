@@ -50,7 +50,7 @@ class _ResturanListState extends State<ResturanList> {
                       colors: [
                     Colors.black12,
                     Colors.black26,
-                    Colors.deepPurple[200].withOpacity(0.9)
+                    Theme.of(context).primaryColor.withOpacity(0.9)
                   ])),
               width: MediaQuery.of(context).size.width * 1,
               height: MediaQuery.of(context).size.height * 0.2,
@@ -61,7 +61,7 @@ class _ResturanListState extends State<ResturanList> {
                 alignment: Alignment.center,
                 child: Text(resturanName[position],style: TextStyle(fontSize: 19,color: Colors.white),),
                 height: 30,
-                color: Colors.deepPurple[200].withOpacity(0.3),
+                color: Theme.of(context).primaryColor.withOpacity(0.3),
                 width: MediaQuery.of(context).size.width * 0.8,
               ),
             )

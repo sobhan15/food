@@ -78,7 +78,7 @@ class _FoodListState extends State<FoodList> {
             Icons.home,
             color: Colors.white,
           ),
-          backgroundColor: Colors.deepPurple[200],
+          backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {},
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -256,7 +256,7 @@ class _FoodListState extends State<FoodList> {
                       ),
                     ],
                   ),
-                  color: Colors.deepPurple[200],
+                  color: Theme.of(context).primaryColor,
                 ),
               )
             ],
