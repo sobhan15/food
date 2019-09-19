@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food/FoodData.dart';
+import 'package:food/FoodGroups.dart';
 import 'package:food/FoodItem.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'FoodData.dart' as FoodData;
 
 import 'Basket.dart';
 import 'ResturanList.dart';
@@ -116,7 +118,7 @@ class _FoodListState extends State<FoodList> {
                                   duration: Duration(milliseconds: 800),
                                   curve: Curves.linearToEaseOut);
                             },
-                            child: rightTolbarItem("سبد خرید", activeBasket)),
+                            child: rightTolbarItem("دسته بندی", activeBasket)),
                       ],
                     ),
                   ),
@@ -157,7 +159,7 @@ class _FoodListState extends State<FoodList> {
                                   toolbarItemOption(false, false, true);
 
                                   setState(() {
-                                    title = "سبد خرید";
+                                    title = "دسته بندی";
                                   });
                                 }
                               },
@@ -192,7 +194,6 @@ class _FoodListState extends State<FoodList> {
                                       ratingFood: 3.5,
                                       pricefood: 13000,
                                       person: "یک",
-                                      
                                     ),
                                     FoodItem(
                                         imageFood: "dizi",
@@ -212,7 +213,7 @@ class _FoodListState extends State<FoodList> {
                                         person: "یک"),
                                   ],
                                 ),
-                                Basket(),
+                                FoodGroups()
                               ],
                             )),
                       ],
@@ -228,9 +229,17 @@ class _FoodListState extends State<FoodList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Text(
-                        "دسته بندی",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Basket(basketdata: FoodData.basketFood,)));
+                        },
+                        child: Text(
+                          "سبد خرید",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
                       Text(
                         "نقشه",

@@ -234,7 +234,7 @@ class _FoodItemState extends State<FoodItem> {
                             "imageFood": imageFood,
                             "descFood": descFood,
                             "priceFood": pricefood,
-                            "person": person,
+                            "orderCount": orderCount,
                             "totalPrice": pricefood * orderCount
                           };
 
