@@ -1,7 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'FoodData.dart' as FoodData;
 
 class FoodItem extends StatefulWidget {
@@ -135,15 +135,23 @@ class _FoodItemState extends State<FoodItem> {
                       ),
                     ),
                     Container(
-                        width: MediaQuery.of(context).size.width * 1,
-                        alignment: Alignment.center,
-                        child: SmoothStarRating(
-                          color: Theme.of(context).primaryColor,
-                          allowHalfRating: true,
-                          starCount: 5,
-                          rating: ratingFood == null ? 0 : ratingFood,
-                          borderColor: Theme.of(context).primaryColor,
-                        )),
+                      width: MediaQuery.of(context).size.width * 1,
+                      alignment: Alignment.center,
+                      child: RatingBar(
+                        onRatingUpdate: (v) {
+                          setState(() {
+                            ratingFood = v;
+                          });
+                        },
+                        itemCount: 5,
+                        itemSize: 30,
+                        glowColor: Theme.of(context).primaryColor,
+                        initialRating: 5,
+                        itemBuilder: (context, _) {
+                          return Icon(Icons.star,color: Theme.of(context).primaryColor,);
+                        },
+                      ),
+                    ),
                     Container(
                         margin: EdgeInsets.only(right: 5),
                         width: MediaQuery.of(context).size.width * 1,

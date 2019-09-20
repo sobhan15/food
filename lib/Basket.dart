@@ -150,10 +150,10 @@ class _BasketState extends State<Basket> {
                                           color: Colors.white, fontSize: 22)),
                                   Text("قبل از تخفیف : $totalPrice تومان ",
                                       style: TextStyle(
-                                          color: Colors.red, fontSize: 15)),
+                                          color: Colors.white, fontSize: 15)),
                                   Text("بعد از تخفیف : $mitigation تومان",
                                       style: TextStyle(
-                                          color: Colors.green, fontSize: 17)),
+                                          color: Colors.white, fontSize: 17)),
                                 ],
                               ),
                               Column(

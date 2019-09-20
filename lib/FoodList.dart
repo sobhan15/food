@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:food/FoodData.dart';
 import 'package:food/FoodGroups.dart';
 import 'package:food/FoodItem.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'FoodData.dart' as FoodData;
 
 import 'Basket.dart';
@@ -30,6 +29,7 @@ class _FoodListState extends State<FoodList> {
     super.initState();
     verPageController = PageController(initialPage: 0);
     horPageController = PageController(viewportFraction: 0.85);
+   
   }
 
   @override

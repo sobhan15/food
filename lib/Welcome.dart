@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food/SignUp.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -26,9 +27,11 @@ class _WelcomeState extends State<Welcome> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
               Container(
-                child: Text("به برنامه ---- \n خوش آمدید",style: TextStyle(color: Colors.white,fontSize: 35),),
+                child: Text(
+                  "به برنامه ---- \n خوش آمدید",
+                  style: TextStyle(color: Colors.white, fontSize: 35),
+                ),
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -79,15 +82,24 @@ class _WelcomeState extends State<Welcome> {
                   height: 40,
                   child: Row(
                     children: <Widget>[
-                      Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height: MediaQuery.of(context).size.height * 1,
-                          color: Color(0xff09888A),
-                          child: Text(
-                            "ثبت نام",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          )),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUp()));
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: MediaQuery.of(context).size.height * 1,
+                            color: Color(0xff09888A),
+                            child: Text(
+                              "ثبت نام",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            )),
+                      ),
                       Container(
                         height: MediaQuery.of(context).size.height * 1,
                         color: Color(0xff095857),

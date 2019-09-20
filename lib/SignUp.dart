@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food/FoodList.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class SignUp extends StatefulWidget {
@@ -136,10 +137,10 @@ class _SignUpState extends State<SignUp> {
               ),
             ),
             AnimatedOpacity(
-              opacity: showVarication?1:0,
+              opacity: showVarication ? 1 : 0,
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
-                          child: Container(
+              child: Container(
                 alignment: Alignment.center,
                 width: MediaQuery.of(context).size.width * 1,
                 height: MediaQuery.of(context).size.height * 1,
@@ -151,7 +152,8 @@ class _SignUpState extends State<SignUp> {
                           children: <Widget>[
                             Text(
                               "کدی که برای شما ارسال کردیم را وارد کنید.",
-                              style: TextStyle(color: Colors.white, fontSize: 20),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
                             ),
                             PinCodeTextField(
                               pinBoxWidth: 30.0,
@@ -170,17 +172,25 @@ class _SignUpState extends State<SignUp> {
                                   showVarication = false;
                                 });
                               },
-                              child: Container(
-                                width: 75,
-                                height: 35,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 1, color: Colors.white),
-                                ),
-                                child: Text(
-                                  "تایید",
-                                  style: TextStyle(color: Colors.white),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FoodList()));
+                                },
+                                child: Container(
+                                  width: 75,
+                                  height: 35,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.white),
+                                  ),
+                                  child: Text(
+                                    "تایید",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             )

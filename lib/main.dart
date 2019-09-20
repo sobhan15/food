@@ -25,12 +25,12 @@ class MyApp extends StatelessWidget {
             Locale("fa", "IR"), 
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: Colors.indigo[200],
-        accentColor: Colors.indigo[50],
+        primaryColor: Colors.teal[400],
+        accentColor: Colors.teal[100],
         primarySwatch: Colors.blue,
         fontFamily: "IranSans"
       ),
-      home: FoodList()
+      home: Welcome()
     );
   }
 }

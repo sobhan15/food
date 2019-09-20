@@ -26,7 +26,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   pin_code_text_field: ^1.4.0
-  smooth_star_rating: ^1.0.3
+  flutter_rating_bar: ^3.0.0
   
 dev_dependencies:
   flutter_test:
