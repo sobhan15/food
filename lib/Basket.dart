@@ -16,6 +16,7 @@ class _BasketState extends State<Basket> {
   int priceFood;
   String person;
   int totalPrice = 0;
+  int mitigation = 0;
   List basketData;
   @override
   void initState() {
@@ -33,7 +34,9 @@ class _BasketState extends State<Basket> {
   void getTotalPrice() {
     for (int i = 0; i < basketData.length; i++) {
       totalPrice += basketData[i]["totalPrice"];
+      mitigation += basketData[i]["mitigation"];
       print(totalPrice);
+      print("$mitigation : is mitigation");
     }
   }
 
@@ -61,6 +64,7 @@ class _BasketState extends State<Basket> {
                         
                         onDismissed: (v) {
                             totalPrice -= basketData[position]["totalPrice"];
+                            mitigation -= basketData[position]["mitigation"];
 
                           setState(() {
                             basketData.removeAt(position);
@@ -144,10 +148,10 @@ class _BasketState extends State<Basket> {
                                   Text("قیمت کل : ",
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 22)),
-                                  Text("قبل از تخفیف : 120000 تومان ",
+                                  Text("قبل از تخفیف : $totalPrice تومان ",
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 15)),
-                                  Text("بعد از تخفیف : $totalPrice تومان",
+                                  Text("بعد از تخفیف : $mitigation تومان",
                                       style: TextStyle(
                                           color: Colors.green, fontSize: 17)),
                                 ],

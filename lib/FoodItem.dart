@@ -8,19 +8,25 @@ class FoodItem extends StatefulWidget {
   final String imageFood;
   final String nameFood;
   final String descFood;
+  final String nameResturan;
   final double ratingFood;
   final int pricefood;
+  final int off;
+  final int mitigation;
   final String person;
 
-  const FoodItem(
-      {Key key,
-      this.imageFood,
-      this.nameFood,
-      this.descFood,
-      this.ratingFood,
-      this.pricefood,
-      this.person,})
-      : super(key: key);
+  const FoodItem({
+    Key key,
+    this.imageFood,
+    this.nameFood,
+    this.descFood,
+    this.nameResturan,
+    this.ratingFood,
+    this.pricefood,
+    this.off,
+    this.mitigation,
+    this.person,
+  }) : super(key: key);
 
   @override
   _FoodItemState createState() => _FoodItemState();
@@ -30,8 +36,11 @@ class _FoodItemState extends State<FoodItem> {
   String imageFood;
   String nameFood;
   String descFood;
+  String nameResturan;
   double ratingFood;
   int pricefood;
+  int off;
+  int mitigation;
   String person;
   int orderCount = 0;
 
@@ -44,8 +53,11 @@ class _FoodItemState extends State<FoodItem> {
       imageFood = widget.imageFood;
       nameFood = widget.nameFood;
       descFood = widget.descFood;
+      nameResturan = widget.nameResturan;
       ratingFood = widget.ratingFood;
       pricefood = widget.pricefood;
+      off = widget.off;
+      mitigation = pricefood - (pricefood * (off / 100)).toInt();
       person = widget.person;
     });
   }
@@ -62,7 +74,6 @@ class _FoodItemState extends State<FoodItem> {
             width: MediaQuery.of(context).size.width * 1,
             height: MediaQuery.of(context).size.height * 1,
             child: Stack(
-              alignment: Alignment.topCenter,
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
@@ -134,13 +145,61 @@ class _FoodItemState extends State<FoodItem> {
                           borderColor: Theme.of(context).primaryColor,
                         )),
                     Container(
+                        margin: EdgeInsets.only(right: 5),
+                        width: MediaQuery.of(context).size.width * 1,
+                        alignment: Alignment.centerRight,
+                        child: Stack(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(Icons.attach_money, color: Colors.black54),
+                                Text(
+                                  "$pricefood تومان",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.black54),
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              top: 10,
+                              child: Container(
+                                height: 2,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.425,
+                                color: Colors.red,
+                              ),
+                            )
+                          ],
+                        )),
+                    Container(
+                        margin: EdgeInsets.only(right: 5),
+                        width: MediaQuery.of(context).size.width * 1,
+                        alignment: Alignment.centerRight,
+                        child: Stack(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(Icons.attach_money),
+                                Text(
+                                  "$mitigation تومان",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )),
+                    Container(
+                      margin: EdgeInsets.only(right: 5),
                       width: MediaQuery.of(context).size.width * 1,
                       alignment: Alignment.centerRight,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Icon(Icons.attach_money),
-                          Text("$pricefood هزار تومان"),
+                          Icon(Icons.person),
+                          Text(" "),
+                          Text("$person نفره"),
                         ],
                       ),
                     ),
@@ -151,8 +210,12 @@ class _FoodItemState extends State<FoodItem> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Icon(Icons.person),
-                          Text("$person نفره"),
+                          Icon(
+                            Icons.restaurant,
+                            size: 25,
+                          ),
+                          Text(" "),
+                          Text("$nameResturan"),
                         ],
                       ),
                     ),
@@ -235,6 +298,7 @@ class _FoodItemState extends State<FoodItem> {
                             "descFood": descFood,
                             "priceFood": pricefood,
                             "orderCount": orderCount,
+                            "mitigation": mitigation * orderCount,
                             "totalPrice": pricefood * orderCount
                           };
 
@@ -254,6 +318,23 @@ class _FoodItemState extends State<FoodItem> {
                       ),
                     )
                   ],
+                ),
+                Positioned(
+                  left: -25,
+                  top: 25,
+                  child: RotationTransition(
+                    turns: AlwaysStoppedAnimation(-45 / 360),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width * 0.35,
+                      height: 20,
+                      child: Text(
+                        "$off %",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
                 ),
               ],
             )),

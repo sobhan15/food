@@ -191,8 +191,11 @@ class _FoodListState extends State<FoodList> {
                                       nameFood: "قورمه سبزی",
                                       descFood:
                                           "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
+                                      nameResturan: "رستوران چاپاتی",
                                       ratingFood: 3.5,
-                                      pricefood: 13000,
+                                      pricefood: 20000,
+                                      off: 20,
+                                      mitigation: null,
                                       person: "یک",
                                     ),
                                     FoodItem(
@@ -200,16 +203,22 @@ class _FoodListState extends State<FoodList> {
                                         nameFood: "دیزی سنگی",
                                         descFood:
                                             "سبزی + پیاز + ترشی بادمجان + دو تکه سنگک",
+                                        nameResturan: "رستوران زیتون",
                                         ratingFood: 5,
-                                        pricefood: 10000,
+                                        pricefood: 17000,
+                                        off: 20,
+                                        mitigation: null,
                                         person: "یک"),
                                     FoodItem(
                                         imageFood: "ghorme",
                                         nameFood: "قورمه سبزی",
                                         descFood:
                                             "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
+                                        nameResturan: "حاج شفیع",
                                         ratingFood: 3.5,
-                                        pricefood: 13000,
+                                        pricefood: 20000,
+                                        off: 10,
+                                        mitigation: null,
                                         person: "یک"),
                                   ],
                                 ),
@@ -234,7 +243,9 @@ class _FoodListState extends State<FoodList> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Basket(basketdata: FoodData.basketFood,)));
+                                  builder: (context) => Basket(
+                                        basketdata: FoodData.basketFood,
+                                      )));
                         },
                         child: Text(
                           "سبد خرید",
