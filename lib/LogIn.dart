@@ -67,6 +67,8 @@ class _LogInState extends State<LogIn> {
               txtFiled(passController,"رمز عبور",Icons.vpn_key,null,null),
               Text(""),
               Text(""),
+              Text("لطفا شماره خود را وارد کنید",style: TextStyle(color: Colors.red),),
+              Text(""),
 
 
                Transform(

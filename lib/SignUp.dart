@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food/FoodList.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'AppData.dart' as AppData;
+import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   @override
@@ -16,7 +18,11 @@ class _SignUpState extends State<SignUp> {
   FocusNode passFocus;
   FocusNode phoneFocus;
 
+  String txtError = "";
+
   bool showVarication = false;
+
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
@@ -57,6 +63,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Color(0xff095857),
           title: Text("عضویت"),
@@ -86,6 +93,10 @@ class _SignUpState extends State<SignUp> {
                     Text(""),
                     Text(""),
                     Text(""),
+                    Text(
+                      txtError,
+                      style: TextStyle(color: Colors.red),
+                    ),
                     Text(""),
                     Transform(
                       transform: Matrix4.skew(-0.4, 0),
@@ -97,10 +108,55 @@ class _SignUpState extends State<SignUp> {
                         child: Row(
                           children: <Widget>[
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 setState(() {
-                                  showVarication = true;
+                                  txtError = "";
                                 });
+                                if (nameController.text.isEmpty) {
+                                  setState(() {
+                                    txtError = "نام نمی تواند خالی بماند";
+                                  });
+                                } else if (phoneController.text.isEmpty) {
+                                  setState(() {
+                                    txtError =
+                                        "لطفا تلفن همراه خود را وارد کنید";
+                                  });
+                                } else if (passController.text.length < 4) {
+                                  setState(() {
+                                    txtError =
+                                        "لطفا رمز عبور قوی تری انتخاب کنید";
+                                  });
+                                } else {
+                                  String link = "${AppData.BaseUrl}/signUp";
+                                  var body = {
+                                    "name": nameController.text,
+                                    "phone": phoneController.text,
+                                    "password": passController.text,
+                                  };
+                                  var response = await http
+                                      .post(Uri.encodeFull(link), body: body);
+                                  if (response.statusCode == 200) {
+                                    if (response.body == "1") {
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(SnackBar(
+                                            backgroundColor: Colors.green,
+                                        content:
+                                            Text("ثبت نام با موفقیت انجام شد"),
+                                      ));
+                                    } else if (response.body == "0") {
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(SnackBar(
+                                            backgroundColor: Colors.red,
+                                        content:
+                                            Text("شماره همراه قبلا ثبت شده است"),
+                                      ));
+                                    }
+                                    print(response.body);
+                                  }
+                                }
+                                // setState(() {
+                                //   showVarication = true;
+                                // });
                               },
                               child: Container(
                                   alignment: Alignment.center,

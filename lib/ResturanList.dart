@@ -37,6 +37,17 @@ class _ResturanListState extends State<ResturanList> {
     return list;
   }
 
+  Future<List<Food>> getFoodById() async {
+    List<Food> list;
+    String link = "${AppData.BaseUrl}/getFoodByName";
+    var response = await http.post(Uri.encodeFull(link));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+      list = data.map((json) => Food.fromJson(json)).toList();
+    }
+    return list;
+  }
+
   Widget ResturanItem(List<ResturanData> list) {
     return ListView.builder(
       itemCount: list.length,
@@ -129,5 +140,45 @@ class ResturanData {
         banner: json["banner"],
         name: json["name"],
         address: json["address"]);
+  }
+}
+
+class Food {
+  int resturanId;
+  String foodName;
+  String foodDesc;
+  int foodPrice;
+  String foodGroup;
+  int off;
+  String person;
+  int foodRate;
+  String foodImage;
+  String resturanName;
+
+  Food({
+    this.resturanId,
+    this.foodName,
+    this.foodDesc,
+    this.foodPrice,
+    this.foodGroup,
+    this.off,
+    this.person,
+    this.foodRate,
+    this.foodImage,
+    this.resturanName,
+  });
+
+  factory Food.fromJson(Map<String, dynamic> json) {
+    return Food(
+        resturanId: json["resturan_id"],
+        foodName: json["name"],
+        foodDesc: json["description"],
+        foodRate: json["rate"],
+        foodGroup: json["groupFood"],
+        foodPrice: json["priceFood"],
+        off: json["off"],
+        person: json["person"],
+        resturanName: json["resturanName"],
+        foodImage: json["image"]);
   }
 }

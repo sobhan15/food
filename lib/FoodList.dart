@@ -23,6 +23,7 @@ class _FoodListState extends State<FoodList> {
   bool activeBasket = false;
   String title = "رستوران ها";
   var initFutureGetdataFood;
+  var initFutureGetDataResturan;
 
   List basketFood = [];
 
@@ -36,6 +37,7 @@ class _FoodListState extends State<FoodList> {
     horPageController = PageController(viewportFraction: 0.85);
 
     initFutureGetdataFood = getDataFood();
+    initFutureGetDataResturan = getDataResturan();
   }
 
   @override
@@ -155,6 +157,90 @@ class _FoodListState extends State<FoodList> {
         duration: Duration(milliseconds: 1200), curve: Curves.linearToEaseOut);
   }
 
+  Future<List<Food>> getFoodById(int resturanId) async {
+    List<Food> list;
+    String link = "${AppData.BaseUrl}/getFoodByName";
+    var body = {"resturan_id": resturanId.toString()};
+    var response = await http.post(Uri.encodeFull(link), body: body);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+      list = data.map((json) => Food.fromJson(json)).toList();
+    }
+    return list;
+  }
+
+  Future<List<ResturanData>> getDataResturan() async {
+    List<ResturanData> list;
+    String link = "${AppData.BaseUrl}/getResturanData";
+    var response = await http.post(Uri.encodeFull(link));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+      list = data.map((json) => ResturanData.fromJson(json)).toList();
+    }
+    return list;
+  }
+
+  Widget ResturanItem(List<ResturanData> list) {
+    return ListView.builder(
+      itemCount: list.length,
+      itemBuilder: (context, position) {
+        return GestureDetector(
+          onTap: () {
+            print(list[position].resturanId);
+            setState(() {
+              initFutureGetdataFood = getFoodById(list[position].resturanId);
+            });
+
+            verPageController.animateToPage(1,
+                duration: Duration(milliseconds: 1200),
+                curve: Curves.linearToEaseOut);
+          },
+          child: Stack(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.all(5),
+                child: Image.network(
+                  list[position].banner,
+                  width: MediaQuery.of(context).size.width * 1,
+                  fit: BoxFit.fill,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                      Colors.black12,
+                      Colors.black26,
+                      Theme.of(context).primaryColor.withOpacity(0.9)
+                    ])),
+                width: MediaQuery.of(context).size.width * 1,
+                height: MediaQuery.of(context).size.height * 0.2,
+              ),
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  margin: EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  child: Text(
+                    list[position].name,
+                    style: TextStyle(fontSize: 19, color: Colors.white),
+                  ),
+                  height: 30,
+                  color: Theme.of(context).primaryColor.withOpacity(0.3),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -255,7 +341,29 @@ class _FoodListState extends State<FoodList> {
                               },
                               scrollDirection: Axis.vertical,
                               children: <Widget>[
-                                Center(child: ResturanList()),
+                                Center(
+                                    child: FutureBuilder(
+                                  future: initFutureGetDataResturan,
+                                  builder: (context, snapShot) {
+                                    if (snapShot.hasData) {
+                                      return ResturanItem(snapShot.data);
+                                    } else if (snapShot.hasError) {
+                                      return Center(
+                                        child: Text(
+                                            "برنامه با مشکل مواجه شده است لطفا بعدا امتحان کنید"),
+                                      );
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          backgroundColor:
+                                              Theme.of(context).primaryColor,
+                                          valueColor: AlwaysStoppedAnimation(
+                                              Theme.of(context).accentColor),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )),
                                 FutureBuilder(
                                   future: initFutureGetdataFood,
                                   builder: (context, snapShot) {
