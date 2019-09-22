@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:food/FoodData.dart';
 import 'package:food/FoodGroups.dart';
 import 'package:food/FoodItem.dart';
 import 'FoodData.dart' as FoodData;
+import 'package:http/http.dart' as http;
+import 'AppData.dart' as AppData;
 
 import 'Basket.dart';
 import 'ResturanList.dart';
@@ -18,6 +22,7 @@ class _FoodListState extends State<FoodList> {
   bool activeResturan = true;
   bool activeBasket = false;
   String title = "رستوران ها";
+  var initFutureGetdataFood;
 
   List basketFood = [];
 
@@ -29,7 +34,8 @@ class _FoodListState extends State<FoodList> {
     super.initState();
     verPageController = PageController(initialPage: 0);
     horPageController = PageController(viewportFraction: 0.85);
-   
+
+    initFutureGetdataFood = getDataFood();
   }
 
   @override
@@ -39,7 +45,7 @@ class _FoodListState extends State<FoodList> {
     super.dispose();
   }
 
-  Widget rightTolbarItem(String name, bool isActive) {
+  Widget rightTolbarItem(String name, bool isActive, IconData icon) {
     return Container(
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width * 0.2,
@@ -47,17 +53,15 @@ class _FoodListState extends State<FoodList> {
       child: RotationTransition(
           turns: AlwaysStoppedAnimation(90 / 360),
           child: isActive
-              ? Text(name,
-                  maxLines: 1,
-                  style: TextStyle(
-                      fontSize: 19,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700))
-              : Text(name,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500))),
+              ? Icon(
+                  icon,
+                  size: 30,
+                  color: Theme.of(context).primaryColor,
+                )
+              : Icon(
+                  icon,
+                  color: Colors.grey,
+                )),
     );
   }
 
@@ -70,6 +74,87 @@ class _FoodListState extends State<FoodList> {
     });
   }
 
+  Future<List<Food>> getDataFood() async {
+    List<Food> list;
+    String link = "${AppData.BaseUrl}/getFoodData";
+    var response = await http.post(Uri.encodeFull(link));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+      print(data);
+      list = data.map((json) => Food.fromJson(json)).toList();
+    }
+
+    return list;
+  }
+
+  Widget setDataInFoodItem(List<Food> list) {
+    return PageView.builder(
+      itemCount: list.length,
+      controller: horPageController,
+      onPageChanged: (v) {
+        print(v);
+      },
+      itemBuilder: (context, position) {
+        return FoodItem(
+            imageFood: list[position].foodImage,
+            nameFood: list[position].foodName,
+            descFood: list[position].foodDesc,
+            nameResturan: list[position].resturanName,
+            ratingFood: list[position].foodRate.toDouble(),
+            pricefood: list[position].foodPrice,
+            off: list[position].off,
+            mitigation: null,
+            person: list[position].person);
+      },
+    );
+  }
+
+  Future getFoodByGroup(String nameGroup) async {
+    List<Food> list;
+    String link = "${AppData.BaseUrl}/getFoodByGroup";
+    var body = {"groupFood": nameGroup};
+    var response = await http.post(Uri.encodeFull(link), body: body);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+      print(data);
+      list = data.map((json) => Food.fromJson(json)).toList();
+    }
+
+    return list;
+  }
+
+  void kababGroup(_) {
+    setState(() {
+      initFutureGetdataFood = getFoodByGroup("کباب");
+    });
+    verPageController.animateToPage(1,
+        duration: Duration(milliseconds: 1200), curve: Curves.linearToEaseOut);
+  }
+
+  void ashGroup(_) {
+    setState(() {
+      initFutureGetdataFood = getFoodByGroup("آش");
+    });
+    verPageController.animateToPage(1,
+        duration: Duration(milliseconds: 1200), curve: Curves.linearToEaseOut);
+  }
+
+  void khoreshGroup(_) {
+    setState(() {
+      initFutureGetdataFood = getFoodByGroup("خورش");
+    });
+    verPageController.animateToPage(1,
+        duration: Duration(milliseconds: 1200), curve: Curves.linearToEaseOut);
+  }
+
+  void fastFoodGroup(_) {
+    setState(() {
+      initFutureGetdataFood = getFoodByGroup("فست فود");
+    });
+    verPageController.animateToPage(1,
+        duration: Duration(milliseconds: 1200), curve: Curves.linearToEaseOut);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +164,9 @@ class _FoodListState extends State<FoodList> {
             color: Colors.white,
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () {},
+          onPressed: () {
+            print("Hi There!");
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Container(
@@ -100,7 +187,8 @@ class _FoodListState extends State<FoodList> {
                                   duration: Duration(milliseconds: 800),
                                   curve: Curves.linearToEaseOut);
                             },
-                            child: rightTolbarItem("رستوران", activeResturan)),
+                            child: rightTolbarItem("رستوران", activeResturan,
+                                Icons.restaurant_menu)),
                         Text(""),
                         GestureDetector(
                             onTap: () {
@@ -109,7 +197,8 @@ class _FoodListState extends State<FoodList> {
                                   duration: Duration(milliseconds: 1200),
                                   curve: Curves.linearToEaseOut);
                             },
-                            child: rightTolbarItem("غذا ها", activeFood)),
+                            child: rightTolbarItem(
+                                "غذا ها", activeFood, Icons.fastfood)),
                         Text(""),
                         GestureDetector(
                             onTap: () {
@@ -118,7 +207,8 @@ class _FoodListState extends State<FoodList> {
                                   duration: Duration(milliseconds: 800),
                                   curve: Curves.linearToEaseOut);
                             },
-                            child: rightTolbarItem("دسته بندی", activeBasket)),
+                            child: rightTolbarItem(
+                                "دسته بندی", activeBasket, Icons.border_all)),
                       ],
                     ),
                   ),
@@ -165,64 +255,34 @@ class _FoodListState extends State<FoodList> {
                               },
                               scrollDirection: Axis.vertical,
                               children: <Widget>[
-                                Center(
-                                    child: ResturanList(
-                                  imgName: [
-                                    "zhoan.jpg",
-                                    "ziton.jpg",
-                                    "chapati.jpg",
-                                    "hajsh.jpg",
-                                  ],
-                                  resturanName: [
-                                    "ژوان",
-                                    "زیتون",
-                                    "چاپاتی",
-                                    "حاج شفیع",
-                                  ],
-                                )),
-                                PageView(
-                                  controller: horPageController,
-                                  onPageChanged: (v) {
-                                    print(v);
+                                Center(child: ResturanList()),
+                                FutureBuilder(
+                                  future: initFutureGetdataFood,
+                                  builder: (context, snapShot) {
+                                    if (snapShot.hasData) {
+                                      return setDataInFoodItem(snapShot.data);
+                                    } else if (snapShot.hasError) {
+                                      return Center(
+                                          child: Text(
+                                              "در دریافت اطلاعات مشکلی بوجود آمده است،لطفا بعدا امتحان کنید"));
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          backgroundColor:
+                                              Theme.of(context).primaryColor,
+                                          valueColor: AlwaysStoppedAnimation(
+                                              Theme.of(context).accentColor),
+                                        ),
+                                      );
+                                    }
                                   },
-                                  children: <Widget>[
-                                    FoodItem(
-                                      imageFood: "ghorme",
-                                      nameFood: "قورمه سبزی",
-                                      descFood:
-                                          "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
-                                      nameResturan: "رستوران چاپاتی",
-                                      ratingFood: 3.5,
-                                      pricefood: 20000,
-                                      off: 20,
-                                      mitigation: null,
-                                      person: "یک",
-                                    ),
-                                    FoodItem(
-                                        imageFood: "dizi",
-                                        nameFood: "دیزی سنگی",
-                                        descFood:
-                                            "سبزی + پیاز + ترشی بادمجان + دو تکه سنگک",
-                                        nameResturan: "رستوران زیتون",
-                                        ratingFood: 5,
-                                        pricefood: 17000,
-                                        off: 20,
-                                        mitigation: null,
-                                        person: "یک"),
-                                    FoodItem(
-                                        imageFood: "ghorme",
-                                        nameFood: "قورمه سبزی",
-                                        descFood:
-                                            "برنج ایرانی + ته چین + سبزی + ترشی + لیمو",
-                                        nameResturan: "حاج شفیع",
-                                        ratingFood: 3.5,
-                                        pricefood: 20000,
-                                        off: 10,
-                                        mitigation: null,
-                                        person: "یک"),
-                                  ],
                                 ),
-                                FoodGroups()
+                                FoodGroups(
+                                  kababGroup: kababGroup,
+                                  ashGroup: ashGroup,
+                                  fastFoodGroup: fastFoodGroup,
+                                  khoreshGroup: khoreshGroup,
+                                )
                               ],
                             )),
                       ],
@@ -273,5 +333,45 @@ class _FoodListState extends State<FoodList> {
             ],
           ),
         ));
+  }
+}
+
+class Food {
+  int resturanId;
+  String foodName;
+  String foodDesc;
+  int foodPrice;
+  String foodGroup;
+  int off;
+  String person;
+  int foodRate;
+  String foodImage;
+  String resturanName;
+
+  Food({
+    this.resturanId,
+    this.foodName,
+    this.foodDesc,
+    this.foodPrice,
+    this.foodGroup,
+    this.off,
+    this.person,
+    this.foodRate,
+    this.foodImage,
+    this.resturanName,
+  });
+
+  factory Food.fromJson(Map<String, dynamic> json) {
+    return Food(
+        resturanId: json["resturan_id"],
+        foodName: json["name"],
+        foodDesc: json["description"],
+        foodRate: json["rate"],
+        foodGroup: json["groupFood"],
+        foodPrice: json["priceFood"],
+        off: json["off"],
+        person: json["person"],
+        resturanName: json["resturanName"],
+        foodImage: json["image"]);
   }
 }

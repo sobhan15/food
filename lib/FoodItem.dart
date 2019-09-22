@@ -281,7 +281,7 @@ class _FoodItemState extends State<FoodItem> {
                       onTap: () {
                         if (orderCount == 0) {
                           _scaffoldKey.currentState.showSnackBar(SnackBar(
-                            backgroundColor: Colors.deepPurple[200],
+                            backgroundColor: Theme.of(context).primaryColor,
                             content: Text(
                               "لطفا تعداد غدا هارا مشخص کنید",
                               style: TextStyle(
