@@ -82,8 +82,8 @@ class _FoodItemState extends State<FoodItem> {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20)),
-                      child: Image.asset(
-                        "images/$imageFood.jpg",
+                      child: Image.network(
+                        imageFood,
                         width: MediaQuery.of(context).size.width * 1,
                         height: MediaQuery.of(context).size.height * 0.3,
                         fit: BoxFit.cover,
@@ -111,7 +111,10 @@ class _FoodItemState extends State<FoodItem> {
                     Container(
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
-                        child: Image.asset("images/$imageFood.jpg"),
+                        child: Image.network(
+                          imageFood,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       decoration: BoxDecoration(
                           color: Colors.amber, shape: BoxShape.circle),
@@ -131,7 +134,7 @@ class _FoodItemState extends State<FoodItem> {
                       width: MediaQuery.of(context).size.width * 1,
                       child: Text(
                         descFood,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     Container(
@@ -148,7 +151,10 @@ class _FoodItemState extends State<FoodItem> {
                         glowColor: Theme.of(context).primaryColor,
                         initialRating: 5,
                         itemBuilder: (context, _) {
-                          return Icon(Icons.star,color: Theme.of(context).primaryColor,);
+                          return Icon(
+                            Icons.star,
+                            color: Theme.of(context).primaryColor,
+                          );
                         },
                       ),
                     ),
@@ -311,6 +317,8 @@ class _FoodItemState extends State<FoodItem> {
                           };
 
                           FoodData.basketFood.add(pickFood);
+                          
+
                           print(FoodData.basketFood);
                         }
                       },

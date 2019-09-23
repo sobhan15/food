@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: "IranSans"
       ),
-      home: LogIn()
+      home: FoodList()
     );
   }
 }

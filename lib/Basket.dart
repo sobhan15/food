@@ -60,7 +60,7 @@ class _BasketState extends State<Basket> {
                       var data = basketData[position];
 
                       return Dismissible(
-                        key: Key(data["nameFood"]),
+                        key: Key("${data["nameFood"]} - ${DateTime.now().millisecondsSinceEpoch}"),
                         
                         onDismissed: (v) {
                             totalPrice -= basketData[position]["totalPrice"];
@@ -100,8 +100,10 @@ class _BasketState extends State<Basket> {
                                   ClipRRect(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)),
-                                    child: Image.asset(
-                                      "images/${data["imageFood"]}.jpg",
+                                    child: Image.network(
+                                      data["imageFood"],
+                                      width: MediaQuery.of(context).size.width*0.3,
+                                      height: MediaQuery.of(context).size.height*0.3,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
