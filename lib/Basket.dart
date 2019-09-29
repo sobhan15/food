@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import "FoodData.dart" as FoodData;
+import 'AppData.dart' as AppData;
+import 'package:http/http.dart' as http;
 
 class Basket extends StatefulWidget {
   final List basketdata;
@@ -18,6 +20,8 @@ class _BasketState extends State<Basket> {
   int totalPrice = 0;
   int mitigation = 0;
   List basketData;
+
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -43,6 +47,11 @@ class _BasketState extends State<Basket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text("سبد خرید"),
+        actions: <Widget>[Center(child: Text("وضعیت سفارشات"))],
+      ),
       body: FoodData.basketFood.length == 0
           ? Center(
               child: Text("سبد خرید شما خالی است"),
@@ -51,6 +60,7 @@ class _BasketState extends State<Basket> {
               child: Stack(
               children: <Widget>[
                 Container(
+                  color: Colors.blue[100],
                   padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).size.height * 0.2,
                   ),
@@ -60,11 +70,11 @@ class _BasketState extends State<Basket> {
                       var data = basketData[position];
 
                       return Dismissible(
-                        key: Key("${data["nameFood"]} - ${DateTime.now().millisecondsSinceEpoch}"),
-                        
+                        key: Key(
+                            "${data["nameFood"]} - ${DateTime.now().millisecondsSinceEpoch}"),
                         onDismissed: (v) {
-                            totalPrice -= basketData[position]["totalPrice"];
-                            mitigation -= basketData[position]["mitigation"];
+                          totalPrice -= basketData[position]["totalPrice"];
+                          mitigation -= basketData[position]["mitigation"];
 
                           setState(() {
                             basketData.removeAt(position);
@@ -102,8 +112,11 @@ class _BasketState extends State<Basket> {
                                         BorderRadius.all(Radius.circular(10)),
                                     child: Image.network(
                                       data["imageFood"],
-                                      width: MediaQuery.of(context).size.width*0.3,
-                                      height: MediaQuery.of(context).size.height*0.3,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -162,29 +175,60 @@ class _BasketState extends State<Basket> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  GestureDetector(
-                                    onTap: () {
-                                      var data = FoodData.basketFood;
+                                  // GestureDetector(
+                                  //   onTap: () {
+                                  //     var data = FoodData.basketFood;
 
-                                      print(data[0]["nameFood"]);
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20))),
-                                      child: Text(
-                                        "پرداخت آنلاین",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      ),
-                                      width: 100,
-                                      height: 40,
-                                    ),
-                                  ),
+                                  //     print(data[0]["nameFood"]);
+                                  //   },
+                                  //   child: Container(
+                                  //     alignment: Alignment.center,
+                                  //     decoration: BoxDecoration(
+                                  //         color: Colors.white,
+                                  //         borderRadius: BorderRadius.all(
+                                  //             Radius.circular(20))),
+                                  //     child: Text(
+                                  //       "پرداخت آنلاین",
+                                  //       style: TextStyle(
+                                  //           color:
+                                  //               Theme.of(context).primaryColor),
+                                  //     ),
+                                  //     width: 100,
+                                  //     height: 40,
+                                  //   ),
+                                  // ),
                                   GestureDetector(
+                                    onTap: () async {
+                                      var response;
+                                      for (int i = 0;
+                                          i < widget.basketdata.length;
+                                          i++) {
+                                        var data = widget.basketdata[i];
+                                        var userId = data["user_id"];
+                                        var foodId = data["food_id"];
+                                        var resturanId = data["resturan_id"];
+                                        var orderCount = data["orderCount"];
+                                        var link =
+                                            "${AppData.BaseUrl}/addOrder";
+                                        var body = {
+                                          "user_id": userId.toString(),
+                                          "food_id": foodId.toString(),
+                                          "resturan_id": resturanId.toString(),
+                                          "orderCount": orderCount.toString(),
+                                        };
+                                        response = await http.post(
+                                            Uri.encodeFull(link),
+                                            body: body);
+                                      }
+                                      if (response.statusCode == 200) {
+                                        _scaffoldKey.currentState
+                                            .showSnackBar(SnackBar(
+                                          backgroundColor: Colors.orange,
+                                          content: Text(
+                                              "به زودی از طرف رستوران با شما تماس گرفته خواهد شد"),
+                                        ));
+                                      }
+                                    },
                                     child: Container(
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
@@ -209,6 +253,44 @@ class _BasketState extends State<Basket> {
                           height: MediaQuery.of(context).size.height * 0.2,
                           color: Theme.of(context).primaryColor,
                         ),
+                ),
+                Center(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius:
+                            BorderRadius.all(Radius.elliptical(150, 30))),
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    child: ListView(
+                      children: <Widget>[
+                        Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 75,
+                        ),
+                        Text(
+                          "سفارشات شما با موفقیت ثبت شد ، به زودی از طرف رستوران با شما تماس گرفته خواهد شد ، ضمن اینکه شما میتوانید از وضعیت لحظه ای سفارش خود مطلع شوید",
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 18, height: 1.2),
+                        ),
+                        Text(""),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 100,
+                              height: 40,
+                              alignment: Alignment.center,
+                              color: Colors.white,
+                              child: Text("باشه",style: TextStyle(color: Colors.orange),),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 )
               ],
             )),

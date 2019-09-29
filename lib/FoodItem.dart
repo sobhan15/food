@@ -2,9 +2,12 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'FoodData.dart' as FoodData;
 
 class FoodItem extends StatefulWidget {
+  final int foodId;
+  final int resturanId;
   final String imageFood;
   final String nameFood;
   final String descFood;
@@ -14,9 +17,14 @@ class FoodItem extends StatefulWidget {
   final int off;
   final int mitigation;
   final String person;
+  final int capacityFood;
+  final int resturanState;
+  final ValueChanged<void> refreshResturanState;
 
   const FoodItem({
     Key key,
+    this.foodId,
+    this.resturanId,
     this.imageFood,
     this.nameFood,
     this.descFood,
@@ -26,6 +34,9 @@ class FoodItem extends StatefulWidget {
     this.off,
     this.mitigation,
     this.person,
+    this.capacityFood,
+    this.resturanState,
+    this.refreshResturanState,
   }) : super(key: key);
 
   @override
@@ -42,6 +53,8 @@ class _FoodItemState extends State<FoodItem> {
   int off;
   int mitigation;
   String person;
+  int capacityFood;
+  int resturanState;
   int orderCount = 0;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -49,6 +62,7 @@ class _FoodItemState extends State<FoodItem> {
   @override
   void initState() {
     super.initState();
+    widget.refreshResturanState(null);
     setState(() {
       imageFood = widget.imageFood;
       nameFood = widget.nameFood;
@@ -59,7 +73,12 @@ class _FoodItemState extends State<FoodItem> {
       off = widget.off;
       mitigation = pricefood - (pricefood * (off / 100)).toInt();
       person = widget.person;
+      capacityFood = widget.capacityFood;
+      resturanState = widget.resturanState;
+      person = widget.person;
     });
+
+    print("resturan State iS $resturanState");
   }
 
   @override
@@ -217,6 +236,19 @@ class _FoodItemState extends State<FoodItem> {
                         ],
                       ),
                     ),
+                        Container(
+                      margin: EdgeInsets.only(right: 5),
+                      width: MediaQuery.of(context).size.width * 1,
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Icon(Icons.restaurant_menu),
+                          Text(" "),
+                          Text(" پرس باقی مانده : ${widget.capacityFood}"),
+                        ],
+                      ),
+                    ),
                     Container(
                       margin: EdgeInsets.only(right: 5),
                       width: MediaQuery.of(context).size.width * 1,
@@ -284,7 +316,7 @@ class _FoodItemState extends State<FoodItem> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async{
                         if (orderCount == 0) {
                           _scaffoldKey.currentState.showSnackBar(SnackBar(
                             backgroundColor: Theme.of(context).primaryColor,
@@ -305,8 +337,12 @@ class _FoodItemState extends State<FoodItem> {
                               ),
                             ),
                           ));
-
+                            var prefs=await SharedPreferences.getInstance();
+                           var userId= prefs.getString("user_id");
                           var pickFood = {
+                            "food_id":widget.foodId.toString(),
+                            "user_id":userId,
+                            "resturan_id":widget.resturanId.toString(),
                             "nameFood": nameFood,
                             "imageFood": imageFood,
                             "descFood": descFood,
@@ -317,7 +353,6 @@ class _FoodItemState extends State<FoodItem> {
                           };
 
                           FoodData.basketFood.add(pickFood);
-                          
 
                           print(FoodData.basketFood);
                         }
@@ -352,6 +387,29 @@ class _FoodItemState extends State<FoodItem> {
                     ),
                   ),
                 ),
+                Center(
+                  child: resturanState == 0
+                      ? Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black45,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          width: MediaQuery.of(context).size.width * 1,
+                          height: MediaQuery.of(context).size.height * 1,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Image.asset("images/resturanClose.png"),
+                              Text(
+                                "رستوران بسته است",
+                                style: TextStyle(
+                                    fontSize: 30, color: Colors.white),
+                              )
+                            ],
+                          ),
+                        )
+                      : null,
+                )
               ],
             )),
       ),

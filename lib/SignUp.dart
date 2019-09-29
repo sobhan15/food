@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:food/FoodList.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'AppData.dart' as AppData;
 import 'package:http/http.dart' as http;
+
+import 'LogIn.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -13,10 +17,14 @@ class _SignUpState extends State<SignUp> {
   TextEditingController nameController;
   TextEditingController passController;
   TextEditingController phoneController;
+  TextEditingController addressController;
 
   FocusNode nameFocus;
   FocusNode passFocus;
   FocusNode phoneFocus;
+  FocusNode addressFocus;
+
+  bool isWaiting = false;
 
   String txtError = "";
 
@@ -30,10 +38,12 @@ class _SignUpState extends State<SignUp> {
     nameController = TextEditingController();
     passController = TextEditingController();
     phoneController = TextEditingController();
+    addressController = TextEditingController();
 
     nameFocus = FocusNode();
     passFocus = FocusNode();
     phoneFocus = FocusNode();
+    addressFocus = FocusNode();
   }
 
   @override
@@ -41,10 +51,12 @@ class _SignUpState extends State<SignUp> {
     nameController.dispose();
     passController.dispose();
     phoneController.dispose();
+    addressController.dispose();
 
     nameFocus.dispose();
     passFocus.dispose();
     phoneFocus.dispose();
+    addressFocus.dispose();
     super.dispose();
   }
 
@@ -85,17 +97,28 @@ class _SignUpState extends State<SignUp> {
                     Text(""),
                     Text(""),
                     txtFiled(phoneController, "تلفن همراه", Icons.phone,
-                        phoneFocus, passFocus),
+                        phoneFocus, addressFocus),
+                    Text(""),
+                    Text(""),
+                    txtFiled(addressController, " آدرس", Icons.home,
+                        addressFocus, passFocus),
                     Text(""),
                     Text(""),
                     txtFiled(passController, "رمز عبور", Icons.vpn_key,
                         passFocus, null),
                     Text(""),
-                    Text(""),
-                    Text(""),
                     Text(
                       txtError,
                       style: TextStyle(color: Colors.red),
+                    ),
+                    Center(
+                      child: isWaiting
+                          ? CircularProgressIndicator(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).accentColor),
+                            )
+                          : null,
                     ),
                     Text(""),
                     Transform(
@@ -127,28 +150,45 @@ class _SignUpState extends State<SignUp> {
                                         "لطفا رمز عبور قوی تری انتخاب کنید";
                                   });
                                 } else {
+                                  setState(() {
+                                    isWaiting = true;
+                                  });
                                   String link = "${AppData.BaseUrl}/signUp";
                                   var body = {
                                     "name": nameController.text,
                                     "phone": phoneController.text,
                                     "password": passController.text,
+                                    "address": addressController.text,
                                   };
                                   var response = await http
                                       .post(Uri.encodeFull(link), body: body);
                                   if (response.statusCode == 200) {
+                                    setState(() {
+                                      isWaiting = false;
+                                    });
                                     if (response.body == "1") {
                                       _scaffoldKey.currentState
                                           .showSnackBar(SnackBar(
-                                            backgroundColor: Colors.green,
+                                        backgroundColor: Colors.green,
                                         content:
                                             Text("ثبت نام با موفقیت انجام شد"),
                                       ));
+                                      nameController.text = "";
+                                      phoneController.text = "";
+                                      passController.text = "";
+                                      addressController.text = "";
+                                      Timer(Duration(seconds: 1), () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => LogIn()));
+                                      });
                                     } else if (response.body == "0") {
                                       _scaffoldKey.currentState
                                           .showSnackBar(SnackBar(
-                                            backgroundColor: Colors.red,
-                                        content:
-                                            Text("شماره همراه قبلا ثبت شده است"),
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                            "شماره همراه قبلا ثبت شده است"),
                                       ));
                                     }
                                     print(response.body);

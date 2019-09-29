@@ -89,6 +89,11 @@ class _FoodListState extends State<FoodList> {
     return list;
   }
 
+  void _refreshResturanState(_) {
+          initFutureGetdataFood = getDataFood();
+
+  }
+
   Widget setDataInFoodItem(List<Food> list) {
     return PageView.builder(
       itemCount: list.length,
@@ -98,15 +103,21 @@ class _FoodListState extends State<FoodList> {
       },
       itemBuilder: (context, position) {
         return FoodItem(
-            imageFood: list[position].foodImage,
-            nameFood: list[position].foodName,
-            descFood: list[position].foodDesc,
-            nameResturan: list[position].resturanName,
-            ratingFood: list[position].foodRate.toDouble(),
-            pricefood: list[position].foodPrice,
-            off: list[position].off,
-            mitigation: null,
-            person: list[position].person);
+          foodId:list[position].foodId,
+          resturanId:list[position].resturanId,
+          imageFood: list[position].foodImage,
+          nameFood: list[position].foodName,
+          descFood: list[position].foodDesc,
+          nameResturan: list[position].resturanName,
+          ratingFood: list[position].foodRate.toDouble(),
+          pricefood: list[position].foodPrice,
+          off: list[position].off,
+          mitigation: null,
+          person: list[position].person,
+          capacityFood: list[position].capacityFood,
+          resturanState: list[position].resturanState,
+          refreshResturanState:_refreshResturanState
+        );
       },
     );
   }
@@ -274,7 +285,7 @@ class _FoodListState extends State<FoodList> {
                                   curve: Curves.linearToEaseOut);
                             },
                             child: rightTolbarItem("رستوران", activeResturan,
-                                Icons.restaurant_menu)),
+                                Icons.restaurant)),
                         Text(""),
                         GestureDetector(
                             onTap: () {
@@ -446,9 +457,12 @@ class _FoodListState extends State<FoodList> {
 
 class Food {
   int resturanId;
+  int foodId;
+  int resturanState;
   String foodName;
   String foodDesc;
   int foodPrice;
+  int capacityFood;
   String foodGroup;
   int off;
   String person;
@@ -458,9 +472,12 @@ class Food {
 
   Food({
     this.resturanId,
+    this.foodId,
+    this.resturanState,
     this.foodName,
     this.foodDesc,
     this.foodPrice,
+    this.capacityFood,
     this.foodGroup,
     this.off,
     this.person,
@@ -472,11 +489,14 @@ class Food {
   factory Food.fromJson(Map<String, dynamic> json) {
     return Food(
         resturanId: json["resturan_id"],
+        foodId: json["id"],
+        resturanState: json["resturanState"],
         foodName: json["name"],
         foodDesc: json["description"],
         foodRate: json["rate"],
         foodGroup: json["groupFood"],
         foodPrice: json["priceFood"],
+        capacityFood: json["capacityFood"],
         off: json["off"],
         person: json["person"],
         resturanName: json["resturanName"],

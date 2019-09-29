@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:food/FoodList.dart';
 import 'AppData.dart' as AppData;
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -127,18 +131,37 @@ class _LogInState extends State<LogIn> {
                               setState(() {
                                 waitForServer = false;
                               });
+
+                              var res = json.decode(response.body)["res"];
+
                               print(response.body);
-                              if (response.body == "1") {
+                              print("it is res :$res");
+
+                              if (res == 1) {
+                                var data = json.decode(response.body)["data"];
+                                print("it is data :${data[0]}");
+                                var prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setString(
+                                    "user_id", data[0]["id"].toString());
+                                prefs.setString("userName", data[0]["name"]);
+                                prefs.setString(
+                                    "userPassword", data[0]["password"]);
+                                prefs.setString("userPhone", data[0]["phone"]);
+                                prefs.setString(
+                                    "userAddress", data[0]["address"]);
                                 _scaffoldKey.currentState.showSnackBar(SnackBar(
                                   content: Text("شما با موفقیت وارد شدید"),
                                   backgroundColor: Colors.green,
                                 ));
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FoodList()));
-                              } else if (response.body == "0") {
+                                Timer(Duration(seconds: 1), () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FoodList()));
+                                });
+                              } else if (res == 0) {
                                 _scaffoldKey.currentState.showSnackBar(SnackBar(
                                   backgroundColor: Colors.red,
                                   content:
