@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:food/FoodData.dart';
 import 'package:food/FoodGroups.dart';
 import 'package:food/FoodItem.dart';
+import 'package:food/finishOrders.dart';
 import 'FoodData.dart' as FoodData;
 import 'package:http/http.dart' as http;
 import 'AppData.dart' as AppData;
@@ -24,6 +25,7 @@ class _FoodListState extends State<FoodList> {
   String title = "رستوران ها";
   var initFutureGetdataFood;
   var initFutureGetDataResturan;
+  int stateDataFood = 0;
 
   List basketFood = [];
 
@@ -35,7 +37,6 @@ class _FoodListState extends State<FoodList> {
     super.initState();
     verPageController = PageController(initialPage: 0);
     horPageController = PageController(viewportFraction: 0.85);
-
     initFutureGetdataFood = getDataFood();
     initFutureGetDataResturan = getDataResturan();
   }
@@ -90,8 +91,7 @@ class _FoodListState extends State<FoodList> {
   }
 
   void _refreshResturanState(_) {
-          initFutureGetdataFood = getDataFood();
-
+    initFutureGetdataFood = getDataFood();
   }
 
   Widget setDataInFoodItem(List<Food> list) {
@@ -103,8 +103,8 @@ class _FoodListState extends State<FoodList> {
       },
       itemBuilder: (context, position) {
         return FoodItem(
-          foodId:list[position].foodId,
-          resturanId:list[position].resturanId,
+          foodId: list[position].foodId,
+          resturanId: list[position].resturanId,
           imageFood: list[position].foodImage,
           nameFood: list[position].foodName,
           descFood: list[position].foodDesc,
@@ -116,7 +116,7 @@ class _FoodListState extends State<FoodList> {
           person: list[position].person,
           capacityFood: list[position].capacityFood,
           resturanState: list[position].resturanState,
-          refreshResturanState:_refreshResturanState
+          //refreshResturanState: null
         );
       },
     );
@@ -262,7 +262,9 @@ class _FoodListState extends State<FoodList> {
           ),
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
-            print("Hi There!");
+            setState(() {
+              initFutureGetdataFood = getDataFood();
+            });
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -284,8 +286,8 @@ class _FoodListState extends State<FoodList> {
                                   duration: Duration(milliseconds: 800),
                                   curve: Curves.linearToEaseOut);
                             },
-                            child: rightTolbarItem("رستوران", activeResturan,
-                                Icons.restaurant)),
+                            child: rightTolbarItem(
+                                "رستوران", activeResturan, Icons.restaurant)),
                         Text(""),
                         GestureDetector(
                             onTap: () {
@@ -436,9 +438,17 @@ class _FoodListState extends State<FoodList> {
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       Text("           "),
-                      Text(
-                        "سفارشات",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FinishOrders()));
+                        },
+                        child: Text(
+                          "سفارشات",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
                       Text(
                         "خروج",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food/OrderState.dart';
 import "FoodData.dart" as FoodData;
 import 'AppData.dart' as AppData;
 import 'package:http/http.dart' as http;
@@ -20,6 +21,8 @@ class _BasketState extends State<Basket> {
   int totalPrice = 0;
   int mitigation = 0;
   List basketData;
+  bool okOrder = false;
+  bool isWaiting = false;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
@@ -50,12 +53,33 @@ class _BasketState extends State<Basket> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text("سبد خرید"),
-        actions: <Widget>[Center(child: Text("وضعیت سفارشات"))],
+        actions: <Widget>[
+          Center(
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => OrderState()));
+                  },
+                  child: Text("وضعیت سفارشات")))
+        ],
       ),
       body: FoodData.basketFood.length == 0
           ? Center(
-              child: Text("سبد خرید شما خالی است"),
-            )
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.shopping_cart,
+                  size: 70,
+                  color: Colors.grey,
+                ),
+                Text(""),
+                Text(
+                  "سبد خرید شما خالی است",
+                  style: TextStyle(color: Colors.grey, fontSize: 18),
+                ),
+              ],
+            ))
           : Container(
               child: Stack(
               children: <Widget>[
@@ -82,6 +106,20 @@ class _BasketState extends State<Basket> {
                           });
                         },
                         background: Container(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                              Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              )
+                            ],
+                          ),
                           color: Colors.red,
                         ),
                         child: Stack(
@@ -199,6 +237,9 @@ class _BasketState extends State<Basket> {
                                   // ),
                                   GestureDetector(
                                     onTap: () async {
+                                      setState(() {
+                                        isWaiting = true;
+                                      });
                                       var response;
                                       for (int i = 0;
                                           i < widget.basketdata.length;
@@ -210,23 +251,30 @@ class _BasketState extends State<Basket> {
                                         var orderCount = data["orderCount"];
                                         var link =
                                             "${AppData.BaseUrl}/addOrder";
+
                                         var body = {
                                           "user_id": userId.toString(),
                                           "food_id": foodId.toString(),
                                           "resturan_id": resturanId.toString(),
                                           "orderCount": orderCount.toString(),
                                         };
+                                        var reduceLink =
+                                            "${AppData.BaseUrl}/reduceCapacity";
+                                        var reduceResponse=await http.post(
+                                            Uri.encodeFull(reduceLink),
+                                            body: {
+                                              "food_id":foodId.toString(),
+                                              "orderCount":orderCount.toString()
+                                            });
                                         response = await http.post(
                                             Uri.encodeFull(link),
                                             body: body);
                                       }
                                       if (response.statusCode == 200) {
-                                        _scaffoldKey.currentState
-                                            .showSnackBar(SnackBar(
-                                          backgroundColor: Colors.orange,
-                                          content: Text(
-                                              "به زودی از طرف رستوران با شما تماس گرفته خواهد شد"),
-                                        ));
+                                        setState(() {
+                                          okOrder = true;
+                                          isWaiting = false;
+                                        });
                                       }
                                     },
                                     child: Container(
@@ -255,42 +303,65 @@ class _BasketState extends State<Basket> {
                         ),
                 ),
                 Center(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius:
-                            BorderRadius.all(Radius.elliptical(150, 30))),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    child: ListView(
-                      children: <Widget>[
-                        Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 75,
-                        ),
-                        Text(
-                          "سفارشات شما با موفقیت ثبت شد ، به زودی از طرف رستوران با شما تماس گرفته خواهد شد ، ضمن اینکه شما میتوانید از وضعیت لحظه ای سفارش خود مطلع شوید",
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 18, height: 1.2),
-                        ),
-                        Text(""),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              width: 100,
-                              height: 40,
-                              alignment: Alignment.center,
-                              color: Colors.white,
-                              child: Text("باشه",style: TextStyle(color: Colors.orange),),
-                            ),
-                          ],
+                    child: isWaiting
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).accentColor),
+                            backgroundColor: Theme.of(context).primaryColor,
+                          )
+                        : null),
+                Center(
+                  child: okOrder
+                      ? Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius:
+                                  BorderRadius.all(Radius.elliptical(150, 30))),
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.height * 0.55,
+                          child: ListView(
+                            children: <Widget>[
+                              Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 75,
+                              ),
+                              Text(
+                                "سفارشات شما با موفقیت ثبت شد ، به زودی از طرف رستوران با شما تماس گرفته خواهد شد ، ضمن اینکه شما میتوانید از بالای صفحه از وضعیت لحظه ای سفارش خود مطلع شوید",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    height: 1.2),
+                              ),
+                              Text(""),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        okOrder = false;
+                                        widget.basketdata.clear();
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 100,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      color: Colors.white,
+                                      child: Text(
+                                        "باشه",
+                                        style: TextStyle(color: Colors.orange),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         )
-                      ],
-                    ),
-                  ),
+                      : null,
                 )
               ],
             )),

@@ -19,7 +19,6 @@ class FoodItem extends StatefulWidget {
   final String person;
   final int capacityFood;
   final int resturanState;
-  final ValueChanged<void> refreshResturanState;
 
   const FoodItem({
     Key key,
@@ -36,7 +35,6 @@ class FoodItem extends StatefulWidget {
     this.person,
     this.capacityFood,
     this.resturanState,
-    this.refreshResturanState,
   }) : super(key: key);
 
   @override
@@ -62,7 +60,7 @@ class _FoodItemState extends State<FoodItem> {
   @override
   void initState() {
     super.initState();
-    widget.refreshResturanState(null);
+   // widget.refreshResturanState(null);
     setState(() {
       imageFood = widget.imageFood;
       nameFood = widget.nameFood;
@@ -159,16 +157,17 @@ class _FoodItemState extends State<FoodItem> {
                     Container(
                       width: MediaQuery.of(context).size.width * 1,
                       alignment: Alignment.center,
-                      child: RatingBar(
-                        onRatingUpdate: (v) {
-                          setState(() {
-                            ratingFood = v;
-                          });
-                        },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          RatingBar(
+                        ignoreGestures: true,
+                        onRatingUpdate: null,
                         itemCount: 5,
                         itemSize: 30,
                         glowColor: Theme.of(context).primaryColor,
-                        initialRating: 5,
+                        initialRating: 3.2,
+                        allowHalfRating: true,
                         itemBuilder: (context, _) {
                           return Icon(
                             Icons.star,
@@ -176,6 +175,9 @@ class _FoodItemState extends State<FoodItem> {
                           );
                         },
                       ),
+                      Text("3.2",style: TextStyle(fontSize: 30,color: Colors.black),)
+                        ],
+                      )
                     ),
                     Container(
                         margin: EdgeInsets.only(right: 5),
@@ -236,7 +238,7 @@ class _FoodItemState extends State<FoodItem> {
                         ],
                       ),
                     ),
-                        Container(
+                    Container(
                       margin: EdgeInsets.only(right: 5),
                       width: MediaQuery.of(context).size.width * 1,
                       alignment: Alignment.centerRight,
@@ -316,9 +318,10 @@ class _FoodItemState extends State<FoodItem> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () async{
+                      onTap: () async {
                         if (orderCount == 0) {
                           _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            duration: Duration(seconds: 1),
                             backgroundColor: Theme.of(context).primaryColor,
                             content: Text(
                               "لطفا تعداد غدا هارا مشخص کنید",
@@ -327,8 +330,20 @@ class _FoodItemState extends State<FoodItem> {
                               ),
                             ),
                           ));
+                        } else if (orderCount > capacityFood) {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            duration: Duration(milliseconds: 1500),
+                            backgroundColor: Colors.orange,
+                            content: Text(
+                              "به تعداد $capacityFood پرس غذا میتوانید سفارش دهید",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ));
                         } else {
                           _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            duration: Duration(seconds: 1),
                             backgroundColor: Colors.green,
                             content: Text(
                               "به تعداد $orderCount عدد $nameFood به سبد خرید شما اضافه شد",
@@ -337,12 +352,12 @@ class _FoodItemState extends State<FoodItem> {
                               ),
                             ),
                           ));
-                            var prefs=await SharedPreferences.getInstance();
-                           var userId= prefs.getString("user_id");
+                          var prefs = await SharedPreferences.getInstance();
+                          var userId = prefs.getString("user_id");
                           var pickFood = {
-                            "food_id":widget.foodId.toString(),
-                            "user_id":userId,
-                            "resturan_id":widget.resturanId.toString(),
+                            "food_id": widget.foodId.toString(),
+                            "user_id": userId,
+                            "resturan_id": widget.resturanId.toString(),
                             "nameFood": nameFood,
                             "imageFood": imageFood,
                             "descFood": descFood,
