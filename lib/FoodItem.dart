@@ -12,7 +12,7 @@ class FoodItem extends StatefulWidget {
   final String nameFood;
   final String descFood;
   final String nameResturan;
-  final double ratingFood;
+  final int ratingFood;
   final int pricefood;
   final int off;
   final int mitigation;
@@ -46,7 +46,7 @@ class _FoodItemState extends State<FoodItem> {
   String nameFood;
   String descFood;
   String nameResturan;
-  double ratingFood;
+  int ratingFood;
   int pricefood;
   int off;
   int mitigation;
@@ -166,7 +166,7 @@ class _FoodItemState extends State<FoodItem> {
                         itemCount: 5,
                         itemSize: 30,
                         glowColor: Theme.of(context).primaryColor,
-                        initialRating: 3.2,
+                        initialRating: ratingFood/10,
                         allowHalfRating: true,
                         itemBuilder: (context, _) {
                           return Icon(
@@ -175,7 +175,7 @@ class _FoodItemState extends State<FoodItem> {
                           );
                         },
                       ),
-                      Text("3.2",style: TextStyle(fontSize: 30,color: Colors.black),)
+                      Text("${ratingFood/10}",style: TextStyle(fontSize: 30,color: Colors.black),)
                         ],
                       )
                     ),

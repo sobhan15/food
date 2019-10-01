@@ -76,8 +76,20 @@ class _FinishOrdersState extends State<FinishOrders> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(list[position].foodName),
-                  Text(list[position].resturanName),
+                  Text(
+                    list[position].foodName,
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900),
+                  ),
+                  Text(
+                    list[position].resturanName,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700),
+                  ),
                 ],
               ),
               Text(""),
@@ -102,6 +114,7 @@ class _FinishOrdersState extends State<FinishOrders> {
                                       setState(() {
                                         list[position].rate--;
                                       });
+                                    
                                     }
                                   },
                                   child: Container(
@@ -161,7 +174,8 @@ class _FinishOrdersState extends State<FinishOrders> {
                                 var link = "${AppData.BaseUrl}/setScore";
                                 var body = {
                                   "order_id": list[position].orderId.toString(),
-                                  "orderRate": "${list[position].rate}"
+                                  "orderRate": "${list[position].rate}",
+                                  "food_id": list[position].foodId.toString()
                                 };
                                 print(list[position].isRating);
                                 print(list[position].rate);
@@ -197,7 +211,7 @@ class _FinishOrdersState extends State<FinishOrders> {
                           children: <Widget>[
                             Text(""),
                             Text(
-                              "${list[position].isRating/10}",
+                              "${list[position].isRating / 10}",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -245,6 +259,7 @@ class _FinishOrdersState extends State<FinishOrders> {
 
 class ModelFinishOrder {
   int orderId;
+  int foodId;
   String foodName;
   String foodImage;
   String resturanName;
@@ -253,6 +268,7 @@ class ModelFinishOrder {
 
   ModelFinishOrder(
       {this.orderId,
+      this.foodId,
       this.foodName,
       this.foodImage,
       this.resturanName,
@@ -262,6 +278,7 @@ class ModelFinishOrder {
   factory ModelFinishOrder.fromJson(Map<String, dynamic> json) {
     return ModelFinishOrder(
         orderId: json["order_id"],
+        foodId: json["food_id"],
         foodName: json["foodName"],
         foodImage: json["foodImage"],
         resturanName: json["resturanName"],

@@ -109,7 +109,7 @@ class _FoodListState extends State<FoodList> {
           nameFood: list[position].foodName,
           descFood: list[position].foodDesc,
           nameResturan: list[position].resturanName,
-          ratingFood: list[position].foodRate.toDouble(),
+          ratingFood: list[position].foodRate,
           pricefood: list[position].foodPrice,
           off: list[position].off,
           mitigation: null,
