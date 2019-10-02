@@ -84,7 +84,6 @@ class _BasketState extends State<Basket> {
               child: Stack(
               children: <Widget>[
                 Container(
-                  color: Colors.blue[100],
                   padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).size.height * 0.2,
                   ),
@@ -315,7 +314,15 @@ class _BasketState extends State<Basket> {
                       ? Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                              color: Colors.orange,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.white,
+                                Theme.of(context).accentColor,
+                                Theme.of(context).primaryColor,
+                              ]
+                            ),
                               borderRadius:
                                   BorderRadius.all(Radius.elliptical(150, 30))),
                           width: MediaQuery.of(context).size.width * 0.9,
@@ -324,13 +331,13 @@ class _BasketState extends State<Basket> {
                             children: <Widget>[
                               Icon(
                                 Icons.check,
-                                color: Colors.white,
+                                color: Colors.black,
                                 size: 75,
                               ),
                               Text(
                                 "سفارشات شما با موفقیت ثبت شد ، به زودی از طرف رستوران با شما تماس گرفته خواهد شد ، ضمن اینکه شما میتوانید از بالای صفحه از وضعیت لحظه ای سفارش خود مطلع شوید",
                                 style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontSize: 18,
                                     height: 1.2),
                               ),
@@ -352,7 +359,7 @@ class _BasketState extends State<Basket> {
                                       color: Colors.white,
                                       child: Text(
                                         "باشه",
-                                        style: TextStyle(color: Colors.orange),
+                                        style: TextStyle(color: Colors.black),
                                       ),
                                     ),
                                   ),

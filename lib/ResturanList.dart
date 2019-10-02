@@ -19,11 +19,13 @@ class _ResturanListState extends State<ResturanList> {
   List imgName;
   List resturanName;
   var initFuture;
+  var initGetDataResturan;
   @override
   void initState() {
     super.initState();
 
     initFuture = getDataResturan();
+    initGetDataResturan = getDataResturan();
   }
 
   Future<List<ResturanData>> getDataResturan() async {
@@ -105,13 +107,25 @@ class _ResturanListState extends State<ResturanList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getDataResturan(),
+      future: initGetDataResturan,
       builder: (context, snapShot) {
         if (snapShot.hasData) {
           return ResturanItem(snapShot.data);
         } else if (snapShot.hasError) {
           return Center(
-            child: Text("برنامه با مشکل مواجه شده است لطفا بعدا امتحان کنید"),
+            child: Column(
+              children: <Widget>[
+                Text("برنامه با مشکل مواجه شده است لطفا بعدssssssssا امتحان کنید"),
+                RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      initGetDataResturan = getDataResturan();
+                    });
+                  },
+                  child: Text("تلاش مجدد"),
+                )
+              ],
+            ),
           );
         } else {
           return Center(

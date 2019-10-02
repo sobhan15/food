@@ -362,8 +362,27 @@ class _FoodListState extends State<FoodList> {
                                       return ResturanItem(snapShot.data);
                                     } else if (snapShot.hasError) {
                                       return Center(
-                                        child: Text(
-                                            "برنامه با مشکل مواجه شده است لطفا بعدا امتحان کنید"),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              "برنامه با مشکل مواجه شده است \n لطفا بعدا امتحان کنید",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            Text(""),
+
+                                            RaisedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  initFutureGetDataResturan =
+                                                      getDataResturan();
+                                                });
+                                              },
+                                              child: Text("تلاش مجدد"),
+                                            )
+                                          ],
+                                        ),
                                       );
                                     } else {
                                       return Center(
@@ -384,8 +403,26 @@ class _FoodListState extends State<FoodList> {
                                       return setDataInFoodItem(snapShot.data);
                                     } else if (snapShot.hasError) {
                                       return Center(
-                                          child: Text(
-                                              "در دریافت اطلاعات مشکلی بوجود آمده است،لطفا بعدا امتحان کنید"));
+                                          child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              "برنامه با مشکل مواجه شده است \n لطفا بعدا امتحان کنید",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            Text(""),
+                                            RaisedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  initFutureGetdataFood =
+                                                      getDataFood();
+                                                });
+                                              },
+                                              child: Text("تلاش مجدد"),
+                                            )
+                                          ],
+                                        ),);
                                     } else {
                                       return Center(
                                         child: CircularProgressIndicator(
