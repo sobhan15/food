@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "709643875454",
+    "firebase_url": "https://brjfood-c338f.firebaseio.com",
+    "project_id": "brjfood-c338f",
+    "storage_bucket": "brjfood-c338f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709643875454:android:ec68cca3786435e215142f",
+        "android_client_info": {
+          "package_name": "com.example.food"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "709643875454-7ohnq3p4om1ajokmfpnhmq4d38omj7fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk5ho2O4G9rDN8QIt042UhuUOg4Q5pDdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "709643875454-7ohnq3p4om1ajokmfpnhmq4d38omj7fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
