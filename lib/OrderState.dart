@@ -15,6 +15,7 @@ class _OrderStateState extends State<OrderState> {
   var initGetDAtaOrderState;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool finishOrder = false;
+  List<ModelOrderState> list = [];
   @override
   void initState() {
     super.initState();
@@ -28,7 +29,6 @@ class _OrderStateState extends State<OrderState> {
   }
 
   Future<List<ModelOrderState>> getDataOrderState() async {
-    List<ModelOrderState> list;
     var prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString("user_id");
     var link = "${AppData.BaseUrl}/getOrderState";
@@ -43,6 +43,18 @@ class _OrderStateState extends State<OrderState> {
   }
 
   Widget orderSatateItem(List<ModelOrderState> list) {
+    if (list.length == 0) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+          
+          Icon(Icons.sentiment_dissatisfied,size: 60,color: Colors.grey,),
+          Text(""),
+          Text("شما تا کنون سفارشی ثبت نکرده اید.",style: TextStyle(color: Colors.grey,fontSize: 20),),
+        ],)
+      );
+    }
     return Stack(
       children: <Widget>[
         GridView.count(
@@ -105,14 +117,20 @@ class _OrderStateState extends State<OrderState> {
                                                 "order_id":
                                                     list[i].orderId.toString()
                                               };
-                                                       var incrementLink =
-                                            "${AppData.BaseUrl}/incrementCapacity";
-                                        var reduceResponse=await http.post(
-                                            Uri.encodeFull(incrementLink),
-                                            body: {
-                                              "food_id":list[i].foodId.toString(),
-                                              "orderCount":list[i].orderCount.toString()
-                                            });
+                                              var incrementLink =
+                                                  "${AppData.BaseUrl}/incrementCapacity";
+                                              var reduceResponse = await http
+                                                  .post(
+                                                      Uri.encodeFull(
+                                                          incrementLink),
+                                                      body: {
+                                                    "food_id": list[i]
+                                                        .foodId
+                                                        .toString(),
+                                                    "orderCount": list[i]
+                                                        .orderCount
+                                                        .toString()
+                                                  });
                                               var response = await http.post(
                                                   Uri.encodeFull(link),
                                                   body: body);

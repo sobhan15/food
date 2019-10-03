@@ -16,12 +16,14 @@ class _FinishOrdersState extends State<FinishOrders> {
   double rate = 30;
   var initFutureGetDataFinishOrer;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  List<ModelFinishOrder> list;
 
   @override
   void initState() {
     super.initState();
 
     initFutureGetDataFinishOrer = getDataFinishOrder();
+   
   }
 
   @override
@@ -32,7 +34,7 @@ class _FinishOrdersState extends State<FinishOrders> {
   Future getDataFinishOrder() async {
     var prefs = await SharedPreferences.getInstance();
     var userId = prefs.getString("user_id");
-    List<ModelFinishOrder> list;
+
     var link = "${AppData.BaseUrl}/getFinishOrder";
     var body = {"user_id": userId};
     var response = await http.post(Uri.encodeFull(link), body: body);
@@ -114,7 +116,6 @@ class _FinishOrdersState extends State<FinishOrders> {
                                       setState(() {
                                         list[position].rate--;
                                       });
-                                    
                                     }
                                   },
                                   child: Container(

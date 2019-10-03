@@ -29,7 +29,11 @@ dependencies:
   flutter_rating_bar: ^3.0.0
   shared_preferences: ^0.5.3+4
   http: ^0.12.0+2
-  
+  flutter_crashlytics:
+  cloud_firestore:
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
