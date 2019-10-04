@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food/LogIn.dart';
 import 'package:food/SignUp.dart';
 
 class Welcome extends StatefulWidget {
@@ -46,15 +47,22 @@ class _WelcomeState extends State<Welcome> {
                   height: 40,
                   child: Row(
                     children: <Widget>[
-                      Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height: MediaQuery.of(context).size.height * 1,
-                          color: Color(0xff09888A),
-                          child: Text(
-                            "ورود",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          )),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => LogIn()));
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: MediaQuery.of(context).size.height * 1,
+                            color: Color(0xff09888A),
+                            child: Text(
+                              "ورود",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            )),
+                      ),
                       Container(
                         height: MediaQuery.of(context).size.height * 1,
                         color: Color(0xff095857),

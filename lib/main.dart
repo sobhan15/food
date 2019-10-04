@@ -2,18 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:food/FoodGroups.dart';
 import 'package:food/FoodList.dart';
-import 'package:food/SignUp.dart';
 import 'package:food/Welcome.dart';
+
 import 'package:flutter_crashlytics/flutter_crashlytics.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'LogIn.dart';
+
 
 
 void main() async {
- bool isInDebugMode = true;
+ bool isInDebugMode = false;
 
  FlutterError.onError = (FlutterErrorDetails details) {
    if (isInDebugMode) {
@@ -36,6 +36,9 @@ void main() async {
    await FlutterCrashlytics().reportCrash(error, stackTrace, forceCrash: false);
  });
 }
+
+//void main()=>runApp(MyApp());
+
 
 
 class MyApp extends StatefulWidget {
@@ -80,6 +83,8 @@ class MyAppState extends State<MyApp> {
             accentColor: Colors.teal[100],
             primarySwatch: Colors.blue,
             fontFamily: "IranSans"),
+
         home: userId == null ? Welcome() : FoodList());
+
   }
 }

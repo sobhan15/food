@@ -45,245 +45,188 @@ class _OrderStateState extends State<OrderState> {
   Widget orderSatateItem(List<ModelOrderState> list) {
     if (list.length == 0) {
       return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          
-          Icon(Icons.sentiment_dissatisfied,size: 60,color: Colors.grey,),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            Icons.sentiment_dissatisfied,
+            size: 60,
+            color: Colors.grey,
+          ),
           Text(""),
-          Text("شما تا کنون سفارشی ثبت نکرده اید.",style: TextStyle(color: Colors.grey,fontSize: 20),),
-        ],)
-      );
+          Text(
+            "شما تا کنون سفارشی ثبت نکرده اید.",
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+          ),
+        ],
+      ));
     }
-    return Stack(
-      children: <Widget>[
-        GridView.count(
-          crossAxisCount: 2,
-          children: List.generate(
-              list.length,
-              (i) => Stack(
-                    children: <Widget>[
-                      Opacity(
-                        opacity: 0.35,
-                        child: Container(
-                          margin: EdgeInsets.all(5),
-                          child: Image.network(
-                            list[i].foodImage,
-                            width: MediaQuery.of(context).size.width * 1,
-                            height: MediaQuery.of(context).size.height * 1,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Container(
+    return GridView.count(
+      crossAxisCount: 2,
+      children: List.generate(
+          list.length,
+          (i) => Stack(
+                children: <Widget>[
+                  Opacity(
+                    opacity: 0.35,
+                    child: Container(
+                      margin: EdgeInsets.all(5),
+                      child: Image.network(
+                        list[i].foodImage,
                         width: MediaQuery.of(context).size.width * 1,
                         height: MediaQuery.of(context).size.height * 1,
-                        margin: EdgeInsets.all(5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Text(
-                              list[i].foodName,
-                              style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              "${list[i].orderCount.toString()} عدد",
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              list[i].dateOrder.split(" ").last,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w800),
-                            ),
-                            Center(
-                                child: list[i].orderState == 0
-                                    ? Column(
-                                        children: <Widget>[
-                                          Text(
-                                            "در انتظار تایید رستوران",
-                                            style: TextStyle(
-                                                color: Colors.orange[900],
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                          Text(""),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              var link =
-                                                  "${AppData.BaseUrl}/setCancel";
-                                              var body = {
-                                                "order_id":
-                                                    list[i].orderId.toString()
-                                              };
-                                              var incrementLink =
-                                                  "${AppData.BaseUrl}/incrementCapacity";
-                                              var reduceResponse = await http
-                                                  .post(
-                                                      Uri.encodeFull(
-                                                          incrementLink),
-                                                      body: {
-                                                    "food_id": list[i]
-                                                        .foodId
-                                                        .toString(),
-                                                    "orderCount": list[i]
-                                                        .orderCount
-                                                        .toString()
-                                                  });
-                                              var response = await http.post(
-                                                  Uri.encodeFull(link),
-                                                  body: body);
-                                              if (response.statusCode == 200) {
-                                                setState(() {
-                                                  initGetDAtaOrderState =
-                                                      getDataOrderState();
-                                                });
-                                                _scaffoldKey.currentState
-                                                    .showSnackBar(SnackBar(
-                                                  content:
-                                                      Text("با موفقیت حذف شد"),
-                                                  backgroundColor: Colors.green,
-                                                  duration:
-                                                      Duration(seconds: 1),
-                                                ));
-                                              }
-                                            },
-                                            child: Container(
-                                              width: 80,
-                                              height: 30,
-                                              color: Colors.red[400],
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                "لغو سفارش",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 13),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : list[i].orderState == 1
-                                        ? Text(
-                                            "در حال آماده شدن",
-                                            style: TextStyle(
-                                                color: Colors.green[900],
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w700),
-                                          )
-                                        : list[i].orderState == 2
-                                            ? Column(
-                                                children: <Widget>[
-                                                  Text(
-                                                    "در دست پیک",
-                                                    style: TextStyle(
-                                                        color:
-                                                            Colors.brown[900],
-                                                        fontSize: 17,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                  Text(""),
-                                                  GestureDetector(
-                                                    onTap: () async {
-                                                      var link =
-                                                          "${AppData.BaseUrl}/setOrderState";
-                                                      var body = {
-                                                        "order_id": list[i]
-                                                            .orderId
-                                                            .toString()
-                                                      };
-                                                      var response =
-                                                          await http.post(
-                                                              Uri.encodeFull(
-                                                                  link),
-                                                              body: body);
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                        setState(() {
-                                                          initGetDAtaOrderState =
-                                                              getDataOrderState();
-                                                          finishOrder = true;
-                                                        });
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      width: 80,
-                                                      height: 30,
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        "به دستم رسید",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 13),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              )
-                                            : null),
-                          ],
-                        ),
+                        fit: BoxFit.cover,
                       ),
-                    ],
-                  )),
-        ),
-        Center(
-          child: finishOrder
-              ? Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius:
-                          BorderRadius.all(Radius.elliptical(150, 30))),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.47,
-                  child: ListView(
-                    children: <Widget>[
-                      Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 75,
-                      ),
-                      Text(
-                        "با تشکر از همراهی شما ، همچنین شما می توانید در قسمت سفارشات از صفحه ی اصلی به غذای مورد نظر امتیاز داده و مارو در ارایه بهتر خدمات همراهی کنید",
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 18, height: 1.2),
-                      ),
-                      Text(""),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                finishOrder = false;
-                              });
-                            },
-                            child: Container(
-                              width: 100,
-                              height: 40,
-                              alignment: Alignment.center,
-                              color: Colors.white,
-                              child: Text(
-                                "باشه",
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
+                    ),
                   ),
-                )
-              : null,
-        )
-      ],
+                  Container(
+                    width: MediaQuery.of(context).size.width * 1,
+                    height: MediaQuery.of(context).size.height * 1,
+                    margin: EdgeInsets.all(5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text(
+                          list[i].foodName,
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          "${list[i].orderCount.toString()} عدد",
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          list[i].dateOrder.split(" ").last,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w800),
+                        ),
+                        Center(
+                            child: list[i].orderState == 0
+                                ? Column(
+                                    children: <Widget>[
+                                      Text(
+                                        "در انتظار تایید رستوران",
+                                        style: TextStyle(
+                                            color: Colors.orange[900],
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                      Text(""),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          var link =
+                                              "${AppData.BaseUrl}/setCancel";
+                                          var body = {
+                                            "order_id":
+                                                list[i].orderId.toString()
+                                          };
+                                          var incrementLink =
+                                              "${AppData.BaseUrl}/incrementCapacity";
+                                          var reduceResponse = await http.post(
+                                              Uri.encodeFull(incrementLink),
+                                              body: {
+                                                "food_id":
+                                                    list[i].foodId.toString(),
+                                                "orderCount": list[i]
+                                                    .orderCount
+                                                    .toString()
+                                              });
+                                          var response = await http.post(
+                                              Uri.encodeFull(link),
+                                              body: body);
+                                          if (response.statusCode == 200) {
+                                            setState(() {
+                                              initGetDAtaOrderState =
+                                                  getDataOrderState();
+                                            });
+                                            _scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                              content: Text("با موفقیت حذف شد"),
+                                              backgroundColor: Colors.green,
+                                              duration: Duration(seconds: 1),
+                                            ));
+                                          }
+                                        },
+                                        child: Container(
+                                          width: 80,
+                                          height: 30,
+                                          color: Colors.red[400],
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "لغو سفارش",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                : list[i].orderState == 1
+                                    ? Text(
+                                        "در حال آماده شدن",
+                                        style: TextStyle(
+                                            color: Colors.green[900],
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700),
+                                      )
+                                    : list[i].orderState == 2
+                                        ? Column(
+                                            children: <Widget>[
+                                              Text(
+                                                "در دست پیک",
+                                                style: TextStyle(
+                                                    color: Colors.brown[900],
+                                                    fontSize: 17,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                              Text(""),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  var link =
+                                                      "${AppData.BaseUrl}/setOrderState";
+                                                  var body = {
+                                                    "order_id": list[i]
+                                                        .orderId
+                                                        .toString()
+                                                  };
+                                                  var response =
+                                                      await http.post(
+                                                          Uri.encodeFull(link),
+                                                          body: body);
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                    setState(() {
+                                                      initGetDAtaOrderState =
+                                                          getDataOrderState();
+                                                      finishOrder = true;
+                                                    });
+                                                  }
+                                                },
+                                                child: Container(
+                                                  width: 80,
+                                                  height: 30,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    "به دستم رسید",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 13),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : null),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
     );
   }
 
@@ -294,26 +237,83 @@ class _OrderStateState extends State<OrderState> {
         appBar: AppBar(
           title: Text("وضعیت سفارشات"),
         ),
-        body: FutureBuilder(
-          future: initGetDAtaOrderState,
-          builder: (context, snapShot) {
-            if (snapShot.hasData) {
-              return orderSatateItem(snapShot.data);
-            } else if (snapShot.hasError) {
-              return Center(
-                child: Text(
-                    "دسترسی به این قسمت امکان پذیر نیست لطفا بعدا امتحان کنید"),
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Theme.of(context).accentColor,
-                  valueColor:
-                      AlwaysStoppedAnimation(Theme.of(context).primaryColor),
-                ),
-              );
-            }
-          },
+        body: Stack(
+          children: <Widget>[
+            FutureBuilder(
+              future: initGetDAtaOrderState,
+              builder: (context, snapShot) {
+                if (snapShot.hasData) {
+                  return orderSatateItem(snapShot.data);
+                } else if (snapShot.hasError) {
+                  return Center(
+                    child: Text(
+                        "دسترسی به این قسمت امکان پذیر نیست لطفا بعدا امتحان کنید"),
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Theme.of(context).accentColor,
+                      valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).primaryColor),
+                    ),
+                  );
+                }
+              },
+            ),
+            Center(
+                child: finishOrder
+                    ? Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius:
+                                BorderRadius.all(Radius.elliptical(150, 30))),
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.height * 0.47,
+                        child: ListView(
+                          children: <Widget>[
+                            Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 75,
+                            ),
+                            Text(
+                              "با تشکر از همراهی شما ، همچنین شما می توانید در قسمت سفارشات از صفحه ی اصلی به غذای مورد نظر امتیاز داده و مارو در ارایه بهتر خدمات همراهی کنید",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 1.2),
+                            ),
+                            Text(""),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      finishOrder = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    height: 40,
+                                    alignment: Alignment.center,
+                                    color: Colors.white,
+                                    child: Text(
+                                      "باشه",
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    : null)
+          ],
         ));
   }
 }
